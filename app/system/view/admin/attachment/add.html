@@ -1,0 +1,101 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('before_content')}
+        
+        
+        <div class="form-tab">
+            <a-tabs v-if="Object.keys(tabs).length > 1" type="card" v-model="activeTab">
+                <a-tab-pane v-for="(item,key) in tabs" :key="key" :tab="item"></a-tab-pane>
+            </a-tabs>
+        </div>
+        <a-form-model class="form" ref="ruleForm" :model="form" :rules="rules" :label-col="{span: 3}"
+            :wrapper-col="{span: 18}">
+
+            {:widget('before_form_item')}
+            
+            
+
+            <div v-show="activeTab == 'base'">
+                <a-form-model-item prop='admin_id' label='管理员ID'>
+                    <yi-select mode='default' v-model='form.admin_id' url='/system/admin/admin/index'
+                        label-field='nickname' value-field='id' :paginate='true'></yi-select>
+                </a-form-model-item>
+                <a-form-model-item prop='user_id' label='会员ID'>
+                    <yi-select mode='default' v-model='form.user_id' url='/system/admin/user/index'
+                        label-field='nickname' value-field='id' :paginate='true'></yi-select>
+                </a-form-model-item>
+                <a-form-model-item prop='url' label='物理路径'>
+                    <yi-upload v-model='form.url'></yi-upload>
+                </a-form-model-item>
+                <a-form-model-item prop='imagewidth' label='宽度'>
+                    <a-input placeholder='请输入宽度' v-model='form.imagewidth'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='imageheight' label='高度'>
+                    <a-input placeholder='请输入高度' v-model='form.imageheight'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='imagetype' label='图片类型'>
+                    <a-input placeholder='请输入图片类型' v-model='form.imagetype'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='imageframes' label='图片帧数'>
+                    <a-input-number v-model='form.imageframes' step='1'></a-input-number>
+                </a-form-model-item>
+                <a-form-model-item prop='filesize' label='文件大小'>
+                    <a-input-number v-model='form.filesize' step='1'></a-input-number>
+                </a-form-model-item>
+                <a-form-model-item prop='mimetype' label='mime类型'>
+                    <a-input placeholder='请输入mime类型' v-model='form.mimetype'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='extparam' label='透传数据'>
+                    <a-input placeholder='请输入透传数据' v-model='form.extparam'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='uploadtime' label='上传时间'>
+                    <yi-date-picker value-format='X' show-time placeholder='请选择日期时间' v-model='form.uploadtime' />
+                </a-form-model-item>
+                <a-form-model-item prop='storage' label='存储位置'>
+                    <a-input placeholder='请输入存储位置' v-model='form.storage'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='md5' label='文件 md5编码'>
+                    <a-input placeholder='请输入文件 md5编码' v-model='form.md5'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='sha1' label='文件 sha1编码'>
+                    <a-input placeholder='请输入文件 sha1编码' v-model='form.sha1'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='type' label='公有/私有'>
+                    <a-input placeholder='请输入公有/私有' v-model='form.type'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='scene' label='场景'>
+                    <a-input placeholder='请输入场景' v-model='form.scene'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='group' label='分组'>
+                    <a-input placeholder='请输入分组' v-model='form.group'></a-input>
+                </a-form-model-item>
+            </div>
+
+            {:widget('after_form_item')}
+            
+            
+            <a-form-item class="fixed-bottom-btn-group" :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button class="btn" :loading="btnLoading" type="primary" @click="onSubmit">提交</a-button>
+                <a-button class="btn" @click="onCancel">取消</a-button>
+            </a-form-item>
+        </a-form-model>
+
+        {:widget('after_content')}
+        
+        
+
+    </div>
+</template>
+{/block}
+{block name="style"}
+{:widget('style')}
+
+
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+
+
+{/block}

@@ -1,0 +1,64 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('before_content')}
+        <yi-search :default-where="query.where" @get-where="handleGetWhere" :columns="columns" @handle-select="init"></yi-search>
+        <div class="btns">
+            {if !in_array('refresh_btn', $hidden)}
+            <a-button @click="init"><a-icon type="reload" /></a-button>
+            {/if}
+            {if !in_array('add_btn', $hidden)}
+            <a-button type="primary" @click="handleAdd" class="{:$auth->check('/system/admin/user_group/add', $auth->id) ? '' : 'hide' }" >{:lang('Add')}</a-button>
+            {/if}
+            {if !in_array('delete_btn', $hidden)}
+            <a-popconfirm v-if="ids.length" placement="topRight" @confirm="handleDeleteBatch" class="{:$auth->check('/system/admin/user_group/delete', $auth->id) ? '' : 'hide' }">
+                <template slot="title">
+                  <p>{:lang('Are you sure to delete?')}</p>
+                </template>
+                <a-button type="danger">{:lang('Delete')}</a-button>
+            </a-popconfirm>
+            {/if}
+            {:widget('after_btns')}
+            
+            
+        </div>
+        <a-table class="table" :columns="c_columns" :data-source="data" 
+            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+            :pagination="false"
+            :loading="loading">
+            <template slot="action" slot-scope="row">
+                {:widget('before_action_slot')}
+                
+                
+                {if !in_array('slot_edit_btn', $hidden) && $auth->check('/system/admin/user_group/edit', $auth->id)}
+                <a href="javascript:;" @click="handleEdit(row)">{:lang('Edit')}</a>
+                {/if}
+                {if !in_array('slot_delete_btn', $hidden) && $auth->check('/system/admin/user/delete', $auth->id)}
+                <a-popconfirm placement="topRight" @confirm="handleDelete(row)">
+                    <template slot="title">
+                      <p>{:lang('Are you sure you want to delete this record?')}</p>
+                    </template>
+                    <span class="pointer text-danger">{:lang('Delete')}</span>
+                </a-popconfirm>
+                {/if}
+                {:widget('after_action_slot')}
+                
+                
+            </template>
+        </a-table>
+        <a-pagination v-if="pagination.total" v-model="query.page" :total="pagination.total" :page-size.sync="query.page_size" show-size-changer show-quick-jumper :show-total="function(total, range) {return $lang('%d records', total);}" :page-size-options="pagination.page_size_options"></a-pagination>
+        {:widget('after_content')}
+        
+        
+    </div>
+</template>
+
+{/block}
+{block name="style"}
+{:widget('style')}
+{/block}
+
+{block name="scripts"}
+{:widget('scripts')}
+{/block}

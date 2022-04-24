@@ -1,0 +1,168 @@
+<style>
+    .system-rules>.rule-container {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+    .system-rules>.rule-container:nth-child(1)>.rule-sub-container {
+        padding: 0;
+        margin: 0;
+    }
+</style>
+<template id="system-rules">
+    <div>
+        <sub-rules class="system-rules" :list="list" v-model="data"></sub-rules>
+    </div>
+</template>
+<script>
+    Yi.ready(function() {
+        var self;
+        Vue.component('system-rules', {
+            template: '#system-rules',
+            data: function() {
+                return {
+                    list: [],
+                    data: [],
+                    pos: {}
+                }
+            },
+            props: {
+                value: {
+                    default: []
+                }
+            },
+            watch: {
+                value: {
+                    deep: true, handler: function(v) {
+                        this.data = v;
+                    }
+                },
+                data: {
+                    deep: true, handler: function(v) {
+                        this.$emit('input', v);
+                    }
+                }
+            },
+            mounted: function() {
+                self = this;
+                this.data = this.value;
+                this.init();
+            },
+            methods: {
+                init: function () {
+                    this.$http.get('/system/admin/user_rule/tree_array?type=0').then(function (data) {
+                        self.list = [{
+                            id: 0, title: $lang('All'), childlist: data
+                        }];
+                    })
+                }
+            }
+        })
+    })
+</script>
+<style>
+    .rule-container {
+        border: 1px solid #ddd;
+        padding: 0;
+        margin: 15px 0;
+        border-radius: 5px;
+    }
+    .rule-sub-container {
+        padding: 0 20px;
+    }
+    .rule-container>.rule-header>.rule-label {
+        font-weight: 700;
+    }
+    .rule-item {
+        display: inline-block;
+        padding: 5px;
+    }
+    .choose-all, .unchoose-all {
+        margin: 0 5px;
+    }
+    .rule-container>.rule-header {
+        background: #eee;
+        padding: 0 5px;
+    }
+</style>
+<template id="sub-rules">
+    <div>
+        <div v-for="(item,index) in list" :key="index" :class="item.childlist.length ? 'rule-container' : 'rule-item'">
+            <div :class="item.id==0 ? '' : 'rule-header'">
+                <label class="rule-label" v-if="item.id!=0">
+                    <input type="checkbox" @change="handleChange(item.id, $event)" :checked="data.indexOf(item.id) != -1" />
+                    <span class="rule-title">{{item.title}}</span>
+                </label>
+                <span v-if="item.childlist.length" class="choose-all pointer" @click="handleChooseAll(item)">{:lang('Choose All')}</span>
+                <span v-if="item.childlist.length" class="unchoose-all pointer" @click="handleUnChooseAll(item)">{:lang('Unchoose All')}</span>
+            </div>
+            <sub-rules class="rule-sub-container" v-if="item.childlist.length" :list="item.childlist" v-model="data"></sub-rules>
+        </div>
+    </div>
+</template>
+<script>
+    Yi.ready(function() {
+        var each = function(item, cb) {
+            typeof cb == 'function' && cb(item.id);
+            if (item.childlist.length) {
+                for (var i = 0; i < item.childlist.length; i ++) each(item.childlist[i], cb);
+            }
+        }
+        var self;
+        Vue.component('sub-rules', {
+            template: '#sub-rules',
+            data: function() {
+                return {
+                    data: []
+                }
+            },
+            props: {
+                list: {
+                    default: []
+                },
+                value: {
+                    default: []
+                }
+            },
+            watch: {
+                value: {
+                    deep: true, handler: function(v) {
+                        this.data = v;
+                    }
+                },
+                data: {
+                    deep: true, handler: function(v) {
+                        this.$emit('input', v)
+                    }
+                }
+            },
+            mounted: function() {
+                self = this;
+                this.data = this.value || [];
+            },
+            methods: {
+                handleChange: function(id, e) {
+                    if(e.target.checked) {
+                        this.data.push(id)
+                    } else {
+                        var index = this.data.indexOf(id);
+                        if (index != -1) this.data.splice(index, 1);
+                    }
+                },
+                handleChooseAll: function(item) {
+                    each(item, function(id) {
+                        var index = self.data.indexOf(id);
+                        if (index == -1) self.data.push(id);
+                    })
+                },
+                handleUnChooseAll: function(item) {
+                    each(item, function(id) {
+                        var index = self.data.indexOf(id);
+                        if (index != -1) self.data.splice(index, 1);
+                    })
+
+                }
+            }
+        })
+    })
+</script>

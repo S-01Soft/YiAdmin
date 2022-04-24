@@ -1,0 +1,17 @@
+<script>
+    Yi.event.on(EventPrefix + 'Columns', function(data) {
+        data.forEach(function(item) {
+            var key = item.key;
+            if (key == 'user_id') {
+                item.search = {
+                    type: 'input', value: ''
+                }
+                item.customRender = function(val, row, index, column) {
+                    var el = '<div>' + row.user.nickname + ' <span style="color: #aaa;">[ID:' + val + ']</span></div>';
+                    return Yi.render.html(val, row, index, column, el);
+                }
+            }
+        })
+        return data;
+    })
+</script>

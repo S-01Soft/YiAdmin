@@ -1,0 +1,208 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('before_content')}
+        <yi-search :default-where="query.where" @get-where="handleGetWhere" :columns="columns" @handle-select="init"></yi-search>
+        <div class="btns">
+            {:widget('after_btns')}
+        </div>
+        <a-row :gutter="8">
+            <a-col :xs="{span: 24}" :sm="{span: 8}" :md="{span: 6}" :lg="{span: 6}">
+                <a-row :gutter="6" style="margin-top: 5px;">
+                    <a-col :span="12">
+                        <div class="card">
+                            <div class="card-header line-1">{:lang('Scene')}</div>
+                            <div class="card-body" :style="{height: layout == 'xs' ? '220px' : '550px'}">
+                                <ul>
+                                    <li class="pointer" :class="'' == query.scene ? 'active' : ''" @click="query.scene = ''">{:lang('All')}</li>
+                                    <li v-for="(item,index) in scenes" :key="index" class="pointer" :class="item.scene == query.scene ? 'active' : ''" @click="query.scene = item.scene">
+                                        {{item.scene}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a-col>
+                    <a-col :span="12">
+                        <div class="card">
+                            <div class="card-header line-1">{:lang('Group')}</div>
+                            <div class="card-body" :style="{height: layout == 'xs' ? '220px' : '550px'}">
+                                <ul>
+                                    <li class="pointer" :class="'' == query.group ? 'active' : ''" @click="query.group = ''">{:lang('All')}</li>
+                                    <li v-for="(item,index) in groups" :key="index" class="pointer" :class="item.group == query.group ? 'active' : ''" @click="query.group = item.group">
+                                        {{item.group}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </a-col>
+                </a-row>
+            </a-col>
+            <a-col :xs="{span: 24}" :sm="{span: 16}" :md="{span: 18}" :lg="{span: 18}">
+                <a-row :gutter="6">
+                    <div>
+                        <a-checkbox :indeterminate="selected.indeterminate" :checked="selected.checkAll" @change="onCheckAllChange">{:lang('Check All')}</a-checkbox>
+                        <span style="color: #999;"> {{ $lang('%d Items Selected', selectedRowKeys.length) }}</span>
+                        <a-button @click="init"><a-icon type="reload" /></a-button>
+                        
+                        <a-button-group>
+                            <yi-upload :show-group="false" :action="uploadUrl" :loading="true" :multiple="true" style="display: inline-block;" @response="handleUploaded">
+                                <a-button type="danger">{:lang('Upload')}</a-button>
+                            </yi-upload>
+                            <a-button type="danger" @click="openModal('upload')"><a-icon type="cloud-upload"></a-icon></a-button>
+                        </a-button-group>
+                        <a-button type="primary" v-show="selectedRowKeys.length" @click="openModal('move')">{:lang('Move To')}</a-button>
+                        {if !in_array('delete_btn', $hidden)}
+                        <a-popconfirm v-if="selectedRowKeys.length" placement="topRight" @confirm="handleDeleteBatch" class="{:$auth->check('/system/admin/attachment/delete', $auth->id) ? '' : 'hide' }">
+                            <template slot="title">
+                              <p>{:lang('Are you sure to delete?')}</p>
+                            </template>
+                            <a-button type="danger">{:lang('Delete')}</a-button>
+                        </a-popconfirm>
+                        {/if}
+                        <a-button v-show="selectedRowKeys.length && multiple" type="primary" @click="handleSelect">{:lang('Choose')}</a-button>
+                    </div>
+                    <a-col :xs="{span: 12}" :sm="{span: 8}" :md="{span: 6}" :lg="{span: 4}" v-for="(item,i) in list" :key="i">
+                        <div class="attach-item" :class="selectedRowKeys.indexOf(i) == -1 ? '' : 'active'" @click="handleChooseAttach(item, i)">
+                            <a-icon theme="filled" class="attach-icon" type="check-circle" v-show="selectedRowKeys.indexOf(i) != -1"></a-icon>
+                            <div class="attach-img">
+                                <img :src="item.imageUrl" alt="">
+                            </div>
+                            <div>
+                                <div class="text-center line-1">{{item.name || item.url}}</div>
+                                <div class="text-center line-1 attr">
+                                    <span>{{item.show_size}}</span>
+                                    <span :style="item.type == 'public' ? '' : 'color: #ff4d4f;'">{{ $lang(item.type) }}</span>
+                                </div>
+                                <div class="text-center line-1 attr">
+                                    <span>{{item.storage}}</span> / 
+                                    <span>{{item.scene}}</span> / 
+                                    <span>{{item.group}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center" style="padding: 2px;">
+                            <div class="pointer btn btn-danger btn-choose" v-if="!multiple" @click="handleSelectOne(item)">{:lang('Choose')}</div>
+                        </div>
+                    </a-col>
+                </a-row>
+                <a-empty v-show="list.length == 0"></a-empty>
+                <a-pagination v-if="pagination.total" v-model="query.page" :total="pagination.total" :page-size.sync="query.page_size" show-size-changer show-quick-jumper :show-total="function(total, range) {return $lang('%d records', total);}" :page-size-options="pagination.page_size_options"></a-pagination>
+            </a-col>
+        </a-row>
+        {:widget('after_content')}
+        
+        <a-modal :title="modal.type=='move' ? $lang('Move To') : $lang('Upload To')" v-model="modal.show" @ok="handleMoveAttachment">
+            <div style="padding: 5px;">
+                <div style="margin: 2px;font-weight: 500;">{:lang('Choose Scene')}</div>
+                <yi-select
+                    mode="combobox"
+                    v-model="modal.scene"
+                    url="/system/admin/attachment/getScenes"
+                    value-field="scene"
+                    label-field="scene"
+                    :placeholder="$lang('Choose Scene')"
+                    :set-default="false"
+                    :allow-clear="true"
+                ></yi-select>
+            </div>
+            <div style="padding: 5px;">
+                <div style="margin: 2px;font-weight: 500;">{:lang('Choose Group')}</div>
+                <yi-select
+                    mode="combobox"
+                    v-model="modal.group"
+                    url="/system/admin/attachment/getGroups"
+                    value-field="group"
+                    label-field="group"
+                    :placeholder="$lang('Choose Group')"
+                    :set-default="false"
+                    :allow-clear="true"
+                ></yi-select>
+            </div>
+            <div v-show="modal.type=='upload'" style="padding: 5px;">
+                <yi-upload :show-group="false" :action="uploadMoreUrl" :multiple="true" :loading="true" style="display: inline-block;" @response="handleUploaded">
+                    <a-button type="danger">{:lang('Upload')}</a-button>
+                </yi-upload>
+            </div>
+        </a-modal>
+        
+    </div>
+</template>
+
+{/block}
+{block name="style"}
+<style>
+    .card {
+        background: #fff;
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+    }
+    .card-header {
+        padding: 0 10px;
+        background: #f3f5f7;
+        text-align: left;
+        color: rgba(0,0,0,.45);
+        font-weight: 500;
+        font-size: 14px;
+        height: 48px;
+        line-height: 48px;
+        box-sizing: border-box;
+    }
+    .card-body {
+        height: 550px;
+        overflow-y: auto;
+    }
+    .card-body li{
+        padding: 10px 10px;
+    }
+
+    .card-body li.active {
+        background-color: #623ceb0d;
+    }
+    .attach-item {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 5px;
+        margin-top: 5px;
+        cursor: default;
+    }
+
+    .attach-item.active {
+        border: 1px solid #1890ff;
+        background-color: #e3f2ff;
+    }
+
+    .attach-item .attach-img {
+        height: 144px;
+        text-align: center;        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .attach-item .attach-icon {
+        position: absolute;
+        color: #1890ff;
+        font-size: 22px;
+    }
+    .attach-item .attach-img img { 
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .attach-item .attr {
+        color: #ababab;
+    }
+    .btn-choose {
+        height: 24px;
+        line-height: 100%;
+        width: 100%;
+    }
+</style>
+{:widget('style')}
+{/block}
+
+{block name="scripts"}
+{:widget('scripts')}
+{/block}

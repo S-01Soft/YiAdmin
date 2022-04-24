@@ -1,0 +1,20 @@
+{
+  "name": "static",
+  "authors": [
+    "sl <406602885@qq.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "admin-lte": "^3.0.5"
+  }
+}

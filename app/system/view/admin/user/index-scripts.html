@@ -1,0 +1,154 @@
+
+<template id="user-change-money-score">
+    <a-modal :title="title" v-model="show" @ok="submit">
+        <a-form :label-col="{span: 4}" :wrapper-col="{span: 18}">
+            <a-form-item :label="$lang('Add Money')" v-if="type=='money'">
+                <a-input-number v-model="form.value"></a-input-number>
+            </a-form-item>
+            <a-form-item :label="$lang('Add Score')" v-if="type=='score'">
+                <a-input-number v-model="form.value"></a-input-number>
+            </a-form-item>
+            <a-form-item :label="$lang('Memo')">
+                <a-textarea v-model="form.memo"></a-textarea>
+            </a-form-item>
+        </a-form>
+    </a-modal>
+</template>
+<script>
+    Yi.ready(function() {
+        Vue.component('user-change-money-score', {
+            template: '#user-change-money-score',
+            data: function() {
+                return {
+                    show: false,
+                    form: {
+                        value: 0,
+                        memo: ''
+                    }
+                }
+            },
+            props: {
+                type: {
+                    default: 'money'
+                },
+                value: {
+                    default: false
+                },
+                userid: 0
+            },
+            computed: {
+                title: function() {
+                    if (this.type == 'money') return $lang('Change Money');
+                    return $lang('Change Score')
+                }
+            },
+            watch: {
+                value: function(v) {
+                    this.show = v;
+                    this.formInit();
+                },
+                show: function(v) {
+                    this.$emit('input', v);
+                }
+            },
+            mounted: function() {
+                this.show = this.value;
+            },
+            methods: {
+                submit: function() {
+                    if (!this.form.value) return;
+                    var self = this;
+                    var url = get_url(this.type);
+                    var form = this.form;
+                    form.userid = this.userid
+                    this.$http.post(url, {form: form}, {loading: true}).then(function() {
+                        self.show = false;
+                        self.$emit('ok');
+                    })
+                },
+                formInit: function() {
+                    this.form.value = 0;
+                    this.form.memo = '';
+                }
+            }
+        });
+    })
+</script>
+<script>    
+    Yi.event.on(EventPrefix + 'Columns', function(data) {
+        data = Yi.util.insertAfter(data, { key: 'nickname' }, {
+            title: $lang('Role'), dataIndex: 'groups', key: 'groups', customRender: function(val, row, index, column) {
+                var el = '';
+                for (var i = 0; i < val.length; i ++) {
+                    el += '<span class="ant-tag ant-tag-has-color" style="background-color: rgb(255, 85, 0);">' + val[i].name + '</span>';
+                }
+                return Yi.render.html(val, row, index, column, el);
+            },
+            search: {
+                value: null, type: 'remoteSelect', option: {
+                    labelField: 'name', valueField: 'id', url: '/system/admin/user_group/tree_list?type=1', s: 'in', mode: 'multiple', style: {width: '150px'}
+                }
+            }
+        });
+
+        data.forEach(function(item) {
+            var key = item.key;
+            if (key == 'id') {
+                item.search = {
+                    value: '', type: 'input'
+                }
+            }
+            if (key == 'nickname') {
+                item.search = {
+                    value: '', type: 'input', s: 'like'
+                };
+            }
+            if (key == 'money') {
+                item.customRender = function(val, row, index, column) {
+                    var h = $vm.$createElement;
+                    return h('span', {
+                        on: {
+                            click: function() {
+                                $vm.modal.show = true;
+                                $vm.modal.type = 'money';
+                                $vm.modal.userid = row.id;
+                            }
+                        },
+                        style: 'display: inline-block;border-bottom: 1px dotted #02101e; padding: 5px 8px;',
+                        class: 'pointer'
+                    }, val);
+                }
+            }
+            if (key == 'score') {
+                item.customRender = function(val, row, index, column) {
+                    var h = $vm.$createElement;
+                    return h('span', {
+                        on: {
+                            click: function() {
+                                $vm.modal.show = true;
+                                $vm.modal.type = 'score';
+                                $vm.modal.userid = row.id;
+                            }
+                        },
+                        style: 'display: inline-block;border-bottom: 1px dotted #02101e; padding: 5px;',
+                        class: 'pointer'
+                    }, val);
+                }
+            }
+        })
+        
+        return data;
+    });
+
+    Yi.vue.mixin({
+        data: function() {
+            return {
+                modal: {
+                    show: false,
+                    type: 'money',
+                    userid: 0
+                }
+            }
+        }
+    })
+</script>

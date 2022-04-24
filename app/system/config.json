@@ -1,0 +1,190 @@
+{
+    "theme": {
+        "group": "Base",
+        "group_key": "base",
+        "name": "theme",
+        "alias": "theme",
+        "title": "Choose Theme",
+        "type": "remoteSelect",
+        "options": {
+            "labelField": "title",
+            "valueField": "name",
+            "url": "\/system\/admin\/index\/getThemes"
+        },
+        "value": "default",
+        "placeholder": "",
+        "tip": ""
+    },
+    "title": {
+        "group_key": "base",
+        "group": "Base",
+        "name": "title",
+        "alias": "title",
+        "title": "Backend Title",
+        "type": "string",
+        "options": [],
+        "value": "零依后台管理系统",
+        "placeholder": "",
+        "tip": ""
+    },
+    "login_validate": {
+        "group_key": "secure",
+        "group": "Secure",
+        "name": "login_validate",
+        "alias": "login_validate",
+        "title": "Backend Login Validate",
+        "type": "checkbox",
+        "options": {
+            "email": "Email",
+            "sms": "Sms"
+        },
+        "value": [],
+        "placeholder": "",
+        "tip": ""
+    },
+    "ip_black_open": {
+        "group": "Secure",
+        "group_key": "secure",
+        "name": "ip_black_open",
+        "alias": "ip_black_open",
+        "title": "Open IP Black",
+        "type": "switch",
+        "options": [],
+        "value": 1,
+        "placeholder": "",
+        "tip": ""
+    },
+    "ip_black_list": {
+        "group": "Secure",
+        "group_key": "secure",
+        "name": "ip_black_list",
+        "alias": "ip_black_list",
+        "title": "IP Black List",
+        "type": "text",
+        "options": [],
+        "value": "",
+        "placeholder": "",
+        "tip": ""
+    },
+    "deny_message": {
+        "group": "Secure",
+        "group_key": "secure",
+        "name": "deny_message",
+        "alias": "deny_message",
+        "title": "Deny Message",
+        "type": "string",
+        "options": [],
+        "value": "您已被禁止访问！",
+        "placeholder": "",
+        "tip": ""
+    },
+    "deny_template": {
+        "group": "Secure",
+        "group_key": "secure",
+        "name": "deny_template",
+        "alias": "deny_template",
+        "title": "Deny Template",
+        "type": "string",
+        "options": [],
+        "value": "portal\/public\/error",
+        "placeholder": "",
+        "tip": ""
+    },
+    "static_open": {
+        "group": "Statics",
+        "group_key": "statics",
+        "name": "static_open",
+        "alias": "open",
+        "title": "Open\/Close",
+        "type": "switch",
+        "options": [],
+        "value": true,
+        "placeholder": "",
+        "tip": ""
+    },
+    "static_maps": {
+        "group": "Statics",
+        "group_key": "statics",
+        "name": "static_maps",
+        "alias": "maps",
+        "title": "Statics Setting",
+        "type": "kv",
+        "options": [],
+        "value": {
+            "vue": "https:\/\/s3.pstatp.com\/cdn\/expire-1-M\/vue\/2.6.10\/vue.min",
+            "axios": "https:\/\/s3.pstatp.com\/cdn\/expire-1-M\/axios\/0.19.2\/axios.min",
+            "lodash": "https:\/\/s2.pstatp.com\/cdn\/expire-1-M\/lodash.js\/4.17.11\/lodash.min",
+            "moment": "https:\/\/s2.pstatp.com\/cdn\/expire-1-M\/moment.js\/2.24.0\/moment.min",
+            "echarts": "https:\/\/s1.pstatp.com\/cdn\/expire-1-M\/echarts\/4.2.1-rc.3\/echarts.min",
+            "jquery": "https:\/\/s0.pstatp.com\/cdn\/expire-1-M\/jquery\/2.2.4\/jquery.min",
+            "antd": "https:\/\/s3.pstatp.com\/cdn\/expire-1-M\/ant-design-vue\/1.7.2\/antd.min",
+            "antd-locales": "https:\/\/s1.pstatp.com\/cdn\/expire-1-M\/ant-design-vue\/1.7.2\/antd-with-locales.min",
+            "require": "https:\/\/s3.pstatp.com\/cdn\/expire-1-M\/require.js\/2.3.6\/require.min.js"
+        },
+        "placeholder": "",
+        "tip": ""
+    },
+    "static_version": {
+        "group": "Statics",
+        "group_key": "statics",
+        "name": "static_version",
+        "alias": "version",
+        "title": "Version",
+        "type": "string",
+        "options": [],
+        "value": "",
+        "placeholder": "",
+        "tip": "不填则为当前时间戳，总是更新"
+    },
+    "base_langs": {
+        "group": "Base",
+        "group_key": "base",
+        "name": "base_langs",
+        "alias": "langs",
+        "title": "Languages",
+        "type": "kv",
+        "options": [],
+        "value": {
+            "zh-cn": "简体中文",
+            "en": "English"
+        },
+        "placeholder": "",
+        "tip": ""
+    },
+    "upload_accept": {
+        "group": "上传",
+        "group_key": "upload",
+        "name": "upload_accept",
+        "alias": "accept",
+        "title": "Allow upload files",
+        "type": "string",
+        "options": [],
+        "value": "*",
+        "placeholder": "",
+        "tip": ""
+    },
+    "upload_maxsize": {
+        "group": "上传",
+        "group_key": "upload",
+        "name": "upload_maxsize",
+        "alias": "maxsize",
+        "title": "File size limit",
+        "type": "string",
+        "options": [],
+        "value": "0",
+        "placeholder": "",
+        "tip": ""
+    },
+    "base_dashbord": {
+        "group": "Base",
+        "group_key": "base",
+        "name": "base_dashbord",
+        "alias": "dashbord",
+        "title": "控制台",
+        "type": "string",
+        "options": [],
+        "value": "",
+        "placeholder": "",
+        "tip": ""
+    }
+}

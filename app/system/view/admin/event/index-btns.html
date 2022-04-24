@@ -1,0 +1,9 @@
+<yi-select placeholder="{:lang('App')}" size="normal" style="width:180px;display: inline-block;margin-right: 10px;" 
+    v-model="app" 
+    :url="'/system/admin/index/getApps?type=all'"
+    :get-data="handleGetData"
+    @vchange="handleAppChange"
+    value-field="name" label-field="title">
+</yi-select>
+<a-button type="danger" @click="reloadEvents">{:lang('Reload Events')}</a-button>
+<a-button type="primary" @click="refreshEvents">{:lang('Refresh Events')}</a-button>

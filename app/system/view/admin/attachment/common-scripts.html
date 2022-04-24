@@ -1,0 +1,92 @@
+<script>
+    Yi.event.on('SystemAdminAttachmentSelectColumns', function(data) {
+        Yi.util.deleteRows(data, [{key: 'type'}, {key: 'scene'}, {key: 'group'}, {key: 'admin.nickname'}, {key: 'user.nickname'}]);
+        return data;
+    });
+    Yi.event.on('SystemAdminAttachmentSelectData,SystemAdminAttachmentIndexData', function(data) {
+        data.groups = [];
+        data.scenes = [];
+        data.query.group = '';
+        data.query.scene = '';
+        return data;
+    });
+    Yi.event.on(EventPrefix + 'Columns', function(data) {
+        Yi.util.find(data, { key: 'url' }, function(item) {
+            item.customRender = function(val, row, index, column) {
+                var option = {
+                    'data-clipboard-text': row.url
+                }
+                var sufix_match = true;
+                var sufix = row.url.split('.')[row.url.split('.').length - 1];
+                switch (sufix) {
+                    case 'zip': 
+                        option.src = '/static/images/zip.png';
+                    break;
+                    case 'xlsx': 
+                    case 'xls': 
+                        option.src = '/static/images/excel.png';
+                    break;
+                    case 'docx': 
+                    case 'doc':
+                        option.src = '/static/images/docx.png';
+                    break;
+                    case 'pdf':
+                        option.src = '/static/images/pdf.png'; 
+                    break;
+                    default: 
+                        sufix_match = false;
+                    break;
+                }
+                if (!sufix_match) {
+                    if (row.mimetype.indexOf('video') != -1) option.src = '/static/images/video.png';
+                    else if (row.type == 'private' && row.mimetype.indexOf('image') != -1) {
+                        option.src = '/static/images/image.png';
+                    } else if (row.type == 'public' && row.mimetype.indexOf('image') != -1) {
+                        option.src = row.url;
+                    } else {
+                        option.src = '/static/images/unkown.png';
+                    }
+                }
+
+                column.option = option;
+                
+                return Yi.render.image(val, row, index, column);
+            }
+        });
+        return data;
+    });
+    var self;
+    Yi.vue.mixin({
+        mounted: function() {
+            self = this;
+            this.getAttributes();
+        },
+        watch: {
+            'query.group': function() {
+                this.init();
+            },
+            'query.scene': function() {
+                this.init();
+            }
+        },
+        methods: {
+            getAttributes: function() {
+                this.$http.post('/system/admin/attachment/getAttributes{if $config.action=="select"}?type=public{/if}').then(function(data) {
+                    self.scenes = data.scenes;
+                    self.groups = data.groups;
+                });
+            },
+            handleUploaded: function(res) {
+                if (res.code == 1) {
+                    this.$message.success($lang('Upload Successful'));
+                    this.init();
+                } else this.$message.error(res.message);
+            }
+        }
+    });
+    Yi.vue.option({
+        methods: {
+
+        }
+    });
+</script>

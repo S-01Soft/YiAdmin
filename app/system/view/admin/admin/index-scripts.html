@@ -1,0 +1,32 @@
+<script>
+    Yi.event.on(EventPrefix + 'Columns', function(data) {
+        data = Yi.util.insertAfter(data, { key: 'nickname' }, {
+            title: $lang('Role'), dataIndex: 'groups', key: 'groups', customRender: function(val, row, index, column) {
+                var el = '';
+                for (var i = 0; i < val.length; i ++) {
+                    el += '<span class="ant-tag ant-tag-has-color" style="background-color: rgb(255, 85, 0);">' + val[i].name + '</span>';
+                }
+                return Yi.render.html(val, row, index, column, el);
+            },
+            search: {
+                value: null, type: 'remoteSelect', s: 'in', option: {
+                    labelField: 'name', valueField: 'id', url: '/system/admin/auth_group/tree_list?type=1', s: 'in', mode: 'multiple', style: {width: '150px'}
+                }
+            }
+        });
+
+        Yi.util.find(data, { key: 'id' }, function(item) {
+            item.search = {
+                value: '', type: 'input'
+            }
+        });
+
+        Yi.util.find(data, { key: 'nickname' }, function(item) {
+            item.search = {
+                value: '', type: 'input', s: 'like'
+            };
+        })
+
+        return data;
+    })
+</script>

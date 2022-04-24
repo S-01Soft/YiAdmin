@@ -1,0 +1,43 @@
+<script>
+    Yi.event.on('SystemAdminAuthRuleIndexColumns', function(data) {
+        return Yi.util.deleteRows(data, [
+            {key: 'pid_c.title'}, {key: 'action$'}
+        ]);
+    });
+
+    Yi.event.on('SystemAdminAuthRuleIndexData', function(data) {
+        data.current_app = '';
+        data.btn_loading = false;
+        data.handleGetApps = function(res) {
+            res = [
+                {title: $lang('All'), name: ''}
+            ].concat(res);
+            return res;
+        }
+        return data;
+    });
+    Yi.vue.option({
+        watch: {
+            current_app: function(v) {
+                this.$set(this.query, 'app', v);
+                this.init();
+            }
+        },
+        methods: {
+            handleRefreshMenu: function() {
+                var self = this;
+                var form = {
+                    name: this.current_app
+                };
+                this.btn_loading = true;
+                this.$http.post('/system/admin/index/refreshMenu', {form: form}).then(function() {
+                    self.btn_loading = false;
+                    top.refreshMenu();
+                    self.init();
+                }).catch(function() {
+                    self.btn_loading = false;
+                });
+            }
+        }
+    });
+</script>

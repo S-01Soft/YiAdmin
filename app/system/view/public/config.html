@@ -1,0 +1,10 @@
+
+    <script>
+        var globalComponents = [];
+        var Config = <?=json_encode($config)?>;
+        var path = '/static/modules/' + Config.module + '/' + Config.controller.replace('.', '/');
+        var action = Config.action;
+        var dashbord = "{$dashbord}" ;
+        var EventPrefix = '{:request()->getName()}';        
+        var base_url = '/{:request()->getModule()}/{:request()->getController()}/' ;
+    </script>

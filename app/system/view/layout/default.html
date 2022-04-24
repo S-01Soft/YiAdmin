@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{php}$system = get_module_config('system');{/php}
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+    {block name="title"}
+    <title>{:lang($system.title??'')}</title>
+    {/block}
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    {:token_meta()}
+    <link rel="stylesheet" href="{$config.statics.maps.layercss|default='/static/vendor/layer/theme/default/layer.css'}">
+
+    <link rel="stylesheet" href="{$config.statics.maps.fontawesome|default='/static/library/font-awesome/css/all.min.css'}">
+
+    <link rel="stylesheet" href="/static/css/layui-theme.css?v={$config.statics.version|default=time()}">
+
+    <link rel="stylesheet" href="{$config.statics.maps.antdcss|default='/static/ant/antd.min.css'}">
+
+    <link rel="stylesheet" href="/static/css/common.css?v={$config.statics.version|default=time()}">
+
+    <style>
+        
+    #loading-block {
+        margin-top: 100px;
+    }
+    #loading-block h1 {
+        text-align: center;
+        font-size: 1.5em;
+        margin-top: 1em;
+        font-weight: 300;
+        /* color: #8E8E8E; */
+        color: #8E8E8E;
+    }
+    #load {
+        width: 50px;
+        animation: loading 3s linear infinite;
+    }
+    
+    #loading-inner {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 300;
+        stroke-width: 10;
+        stroke-miterlimit: 10;
+        stroke-linecap: round;
+        animation: loading-circle 2s linear infinite;
+        /* stroke: #075964; */
+        stroke: #075964;
+        fill: transparent;
+    }
+
+    @keyframes loading {
+        0% { 
+            transform: rotate(0); 
+        }
+        100% { 
+            transform: rotate(360deg);
+        }
+    }
+    @keyframes loading-circle {
+        0% { 
+            stroke-dashoffset: 0
+        }
+        100% { 
+            stroke-dashoffset: -600;
+        }
+    }
+    </style>
+    {block name="style"}{/block}
+    <script>
+        var globalComponents = [];
+        var Config = <?=json_encode($config)?>;
+        var path = '/static/modules/' + Config.module + '/' + Config.controller;
+        if (Config.module != 'system') path += '.js?r=' + Config.moduleVersion;
+        var action = Config.action;
+        var EventPrefix = '{:request()->getName()}';
+        var base_url = '/{$config.module}/{:snake_controller($config.controller)}/';
+    </script>
+</head>
+<body>
+    {include file="app/system/view/public/ie-head.html" /}
+    <div class="content" id="main-app">
+        <a-locale-provider :locale="lang">
+            <app></app>
+        </a-locale-provider>
+    </div>
+    <div class="text-center" id="loading-block">
+        <svg id="load" x="0px" y="0px" viewBox="0 0 150 150"><circle id="loading-inner" cx="75" cy="75" r="60"></circle></svg>
+        <h1>
+            {:lang('Loading, Please Wait')}
+        </h1>
+    </div>
+    {block name="content"}{/block}
+    <script src="/static/js/common.js?v={$config.statics.version|default=time()}"></script>
+    <script type="text/javascript" src="/static/js/yi.js?v={$config.statics.version|default=time()}"></script>
+    {:widget('component')}
+    {block name="scripts"}{/block}
+    {:widget('before-main-scripts')}
+    <script src="{$config.statics.open && $config.statics.maps.require ? $config.statics.maps.require : '/static/library/requirejs/require.js'}" data-main="/static/js/system.js?v={$config.statics.version|default=time()}"></script>
+    {:widget('after-main-scripts')}
+</body>
+</html>

@@ -1,0 +1,13 @@
+<script>
+    Yi.vue.mixin({
+        watch: {
+            'query.group_id': function() {
+                this.init();
+            }
+        }
+    });
+    Yi.event.on(EventPrefix + 'Data', function(data) {
+        data.query.group_id = {:empty($groups) ? 0 : $groups[0]['group_id']};
+        return data;
+    });
+</script>

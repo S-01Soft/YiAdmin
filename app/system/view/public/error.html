@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+{php}$system=get_module_config('system');{/php}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{$system.title|default='后台管理系统'}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {include file="app/system/view/public/header.html" /}
+
+    <link rel="stylesheet" href="/static/ant/antd.min.css">
+    <style>
+        .error-icon svg {
+            width: 50px;
+            height: 50px;
+        }
+        .error-message {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+    {php} $config = [
+        'statics' => get_module_group_config('system', 'statics'),
+        'langVersion' => ev('GetLangVersion'),
+        'version' => get_version(),
+        'lang' => request()->var('locale'),
+        'debug' => config('app.debug'),
+        'admin' => array_merge_deep(request()->config('common'), request()->config('admin'))
+    ]; {/php}
+    <script>
+        var globalComponents = [];
+        var Config = <?=json_encode($config)?>;
+        var action = 'error';
+        var path = '/static/modules/system/admin/index';
+        var EventPrefix = 'SystemError';
+        var base_url = '/{:request()->getModule()}/{:request()->getController()}/' ;
+    </script>
+</head>
+
+<body>
+    
+    {include file="app/system/view/public/ie-head.html" /}
+    <div id="main-app" v-cloak>
+        <app></app>
+    </div>
+    <template id="app">
+        <div class="content" style="text-align: center;margin-top: 120px;">            
+            <a-icon class="error-icon" type="close-circle" style="color: rgb(228, 23, 23);" ></a-icon>
+            <div class="error-message">{$message}</div>
+            <div>
+                <a-button style="margin-top: 40px;" type="danger" @click="handleGoBack">返 回</a-button>
+            </div>
+        </div>
+    </template>
+    <script src="/static/js/common.js?v={$config.statics.version|default=time()}"></script>
+    <script src="/static/js/yi.js?v={$config.statics.version|default=time()}"></script>
+
+    <script src="/static/library/requirejs/require.js" data-main="/static/js/system.js?v={$config.statics.version|default=time()}"></script>
+</body>
+
+</html>

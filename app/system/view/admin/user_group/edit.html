@@ -1,0 +1,57 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('before_content')}
+        
+        
+        <div class="form-tab">
+            <a-tabs v-if="Object.keys(tabs).length > 1" type="card" v-model="activeTab">
+                <a-tab-pane v-for="(item,key) in tabs" :key="key" :tab="item"></a-tab-pane>
+            </a-tabs>
+        </div>
+        <a-form-model class="form" ref="ruleForm" :model="form" :rules="rules" :label-col="{span: 3}"
+            :wrapper-col="{span: 18}">
+            {:widget('before_form_item')}
+            
+            
+            <div v-show="activeTab == 'base'">
+                <a-form-model-item prop='pid' label='{:lang("Parent")}'>
+                    <yi-select mode='default' v-model='form.pid' url='/system/admin/user_group/tree_list'
+                        label-field='name' value-field='id' :paginate='false'></yi-select>
+                </a-form-model-item>
+                <a-form-model-item prop='name' label='{:lang("Name")}'>
+                    <a-input :placeholder='$lang("Name")' v-model='form.name'></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop='rules' label='{:lang("Rules")}'>
+                    <system-rules v-model="form.rules"></system-rules>
+                </a-form-model-item>
+                <a-form-model-item prop='status' label='{:lang("Status")}'>
+                    <a-switch v-model='form.status' />
+                </a-form-model-item>
+            </div>
+
+            {:widget('after_form_item')}
+            
+            
+            <a-form-item class="fixed-bottom-btn-group" :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button class="btn" :loading="btnLoading" type="primary" @click="onSubmit">{:lang('Submit')}</a-button>
+                <a-button class="btn" @click="onCancel">{:lang('Cancel')}</a-button>
+            </a-form-item>
+        </a-form-model>
+        {:widget('after_content')}
+        
+        
+    </div>
+</template>
+{/block}
+{block name="style"}
+{:widget('style')}
+
+
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+
+
+{/block}

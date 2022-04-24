@@ -1,0 +1,197 @@
+<script>
+    Yi.event.on('SystemAdminAttachmentSelectColumns', function(data) {
+        Yi.util.deleteRows(data, [{key: 'type'}, {key: 'scene'}, {key: 'group'}, {key: 'admin.nickname'}, {key: 'user.nickname'}]);
+        return data;
+    });
+    Yi.event.on('SystemAdminAttachmentSelectData,SystemAdminAttachmentIndexData', function(data) {
+        data.groups = [];
+        data.scenes = [];
+        data.query.scene = '';
+        data.query.group = '';
+        return data;
+    });
+    Yi.vue.mixin({
+        data: function() {
+            return {
+                selected: {
+                    indeterminate: false,
+                    checkAll: false,
+                },
+                modal: {
+                    show: false,
+                    type: '',
+                    scene: '',
+                    group: ''
+                }
+            }
+        },
+        mounted: function() {
+            this.getAttributes();
+        },
+        computed: {
+            list: function() {
+                var list = [];
+                for (var i = 0; i < this.data.length; i ++) {
+                    var item = this.data[i];
+                    item.imageUrl = this.showUrl(item);
+                    list.push(item);
+                }
+                return list;
+            },
+            uploadUrl: function() {
+                return '/system/admin/attachment/upload?scene=' + this.query.scene + '&group=' + this.query.group;
+            },
+            uploadMoreUrl: function() {
+                return '/system/admin/attachment/upload?scene=' + this.modal.scene + '&group=' + this.modal.group;
+            }
+        },
+        watch: {
+            'query.scene': function() {
+                this.query.page = 1;
+                this.query.group = '';
+                this.getGroups();
+                this.init();
+            },
+            'query.group': function() {
+                this.query.page = 1;
+                this.init();
+            },
+            data: {
+                deep: true,
+                handler: function() {
+                    this.setCheckAllState();
+                }
+            }
+        },
+        methods: {
+            getAttributes: function() {
+                var self = this;
+                this.getScenes();
+                this.getGroups();
+            },
+            getScenes: function() {
+                var self = this;
+                this.$http.post('/system/admin/attachment/getScenes').then(function(data) {
+                    self.scenes = data;
+                })
+            },
+            getGroups: function() {
+                var self = this;
+                this.$http.post('/system/admin/attachment/getGroups?scene=' + this.query.scene).then(function(data) {
+                    self.groups = data;
+                })
+            },
+            openModal: function(type) {
+                this.modal.type = type;
+                this.modal.show = true;
+            },
+            handleChooseAttach: function(item, index) {
+                this.setSelectedRow(item, index);
+            },
+            setSelectedRow: function(item, index) {
+                var i = this.selectedRowKeys.indexOf(index)
+                if (i == -1) {
+                    this.selectedRowKeys.push(index);
+                    this.selectedRows.push(item);
+                } else {
+                    this.selectedRowKeys.splice(i, 1);
+                    this.selectedRows.splice(i, 1);
+                }
+                this.setCheckAllState();
+            },
+            handleMoveAttachment: function() {
+                if (this.modal.type == 'upload') {
+                    this.modal.show = false;
+                    return;
+                }
+                var self = this;
+                this.$http.post('/system/admin/attachment/move', {
+                    ids: this.ids,
+                    group: this.modal.group,
+                    scene: this.modal.scene
+                }).then(function(data) {
+                    self.modal.show = false;
+                    self.init();
+                    self.selectedRowKeys = [];
+                    self.selectedRows = []
+                })
+            },
+            setCheckAllState: function() {
+                var count = 0;
+                for (var i = 0; i < this.data.length; i ++) {
+                    var item = this.data[i];
+                    if (this.selectedRowKeys.indexOf(i) != -1) count ++
+                }
+                if (count == 0) {
+                    this.selected.indeterminate = false;
+                    this.selected.checkAll = false;
+                } else if (count == this.data.length) {
+                    this.selected.indeterminate = false;
+                    this.selected.checkAll = true;
+                } else {
+                    this.selected.indeterminate = true;
+                    this.selected.checkAll = true;   
+                }
+            },
+            onCheckAllChange: function() {
+                for (var i = 0; i < this.data.length; i ++) {
+                    var item = this.data[i];
+                    var index = this.selectedRowKeys.indexOf(i)
+                    if (index != -1 && this.selected.checkAll) {
+                        this.selectedRowKeys.splice(index, 1);
+                        this.selectedRows.splice(index, 1);
+                    }
+                    else if (index == -1 && !this.selected.checkAll) {
+                        this.selectedRowKeys.push(i);
+                        this.selectedRows.push(item);
+                    }
+                }
+                this.selected.indeterminate = false;
+                this.selected.checkAll = !this.selected.checkAll;
+            },
+            showUrl: function(row) {
+                var url = row.url;
+                var sufix_match = true;
+                var sufix = row.url.split('.')[row.url.split('.').length - 1];
+                switch (sufix) {
+                    case 'zip': 
+                        url = '/static/images/zip.png';
+                    break;
+                    case 'xlsx': 
+                    case 'xls': 
+                        url = '/static/images/excel.png';
+                    break;
+                    case 'docx': 
+                    case 'doc':
+                    url = '/static/images/docx.png';
+                    break;
+                    case 'pdf':
+                    url = '/static/images/pdf.png'; 
+                    break;
+                    default: 
+                        sufix_match = false;
+                    break;
+                }
+                if (!sufix_match) {
+                    if (row.mimetype.indexOf('video') != -1) url = '/static/images/video.png';
+                    else if (row.type == 'private' && row.mimetype.indexOf('image') != -1) {
+                        url = '/static/images/image.png';
+                    } else if (row.type == 'public' && row.mimetype.indexOf('image') != -1) {
+                        url = row.url;
+                    } else {
+                        url = '/static/images/unkown.png';
+                    }
+                }
+                return url;
+            },
+            handleUploaded: function(res) {
+                if (res.code == 1) {
+                    this.$message.success($lang('Upload Successful'));
+                    this.init();
+                } else this.$message.error(res.message);
+                this.modal.show = false;
+            }
+        }
+    });
+    
+</script>

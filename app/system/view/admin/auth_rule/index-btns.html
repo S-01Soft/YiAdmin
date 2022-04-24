@@ -1,0 +1,2 @@
+<yi-select v-model="current_app" :get-data="handleGetApps" style="width: 140px;display: inline-block;" url="/system/admin/index/getApps?type=all" label-field="title" value-field="name"></yi-select>
+<a-button type="danger" :loading="btn_loading" @click="handleRefreshMenu">{:lang('Refresh Menu')}</a-button>

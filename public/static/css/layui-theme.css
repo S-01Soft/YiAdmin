@@ -1,0 +1,51 @@
+
+.layui-layer-title {
+    background-color: #001529!important;
+    color: #fff!important;
+}
+
+.layui-layer-title .layui-layer-close {
+    background: none!important;
+}
+
+.layui-layer-ico {
+    background: none!important;
+}
+
+.layui-layer-setwin {
+    top: 0!important;
+    height: 42px;
+}
+
+.layui-layer-setwin > a {
+    height: 42px!important;
+    line-height: 42px!important;
+    display: inline-block!important;
+}
+
+.layui-layer-setwin > a::before {
+    content: "\e625";
+    font-family: "Font Awesome 5 Free"!important;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    font-weight: 900;
+    color: #fff;
+    font-size: 15px;
+}
+.layui-layer-setwin .layui-layer-close::before {
+    content: "\f00d";
+}
+
+.layui-layer-btn .layui-layer-btn0 {
+    background-color: #001529!important;
+    border-color: #001529!important;
+}
+
+.layui-layer-setwin .layui-layer-close2 {
+    right: -50px;
+}

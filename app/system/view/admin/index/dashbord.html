@@ -1,0 +1,188 @@
+{extend name="admin/public/layout" /}
+{block name="style"}
+<style>
+
+    .ant-card-head-title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .module {
+        margin: 10px 0;
+    }
+    .quick-menu .title {
+        padding: 20px;
+    }
+    .quick-menu .title span {
+        font-size: 16px;
+        font-weight: 700;
+    }
+    .quick-menu .menu-item {
+        padding: 10px;
+    }
+    .quick-menu .menu-item:hover {
+        background: #eee;
+    }
+
+    .top10 ul {
+        margin-top: 10px;
+    }
+
+    .top10 li {
+        margin: 6px 0;
+    }
+
+    .top10 .sort {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #C0C1C3;
+        border-radius: 50%;
+        color: #fff;
+        margin-right: 10px;
+    }
+
+    .top10 .sort.top-3 {
+        background: #ED4138;
+    }
+
+    .top10 .total {
+        float: right;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .top10 .title {
+        display: inline-block;
+        max-width: 80%;
+    }
+</style>
+{:widget('style')}
+{/block}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('dashbord_before_content')}
+
+        <div class="module quick-menu">
+            <div class="title">
+                <span>{:lang("Quick Menus")}</span>
+                <i class="far fa-edit pointer" style="margin-left: 10px;" @click="quickMenu.editable=!quickMenu.editable"></i>
+                <a-popconfirm v-if="quickMenu.editable" placement="topRight"
+                    @confirm="handleClearMenuSetting">
+                    <template slot="title">
+                        <p>{:lang("Are you sure you want to revert to the original settings?")}</p>
+                    </template>
+                    <i class="fas fa-share pointer" style="margin-left: 10px;color: #ED4138;"></i>
+                </a-popconfirm>
+            </div>
+            <a-row>
+                <a-col :xs="8" :sm="6" :md="3" :lg="2" v-for="(item,index) in quick_menu_list" :key="index" class="text-center pointer menu-item" @click="handleOpen(item, index)">
+                    <i v-show="quickMenu.editable" class="fa fa-minus" style="position: absolute;top: 5px;right:5px;color:#ED4138;" @click="handleRemoveMenu(item, index, $event)"></i>
+                    <i style="font-size: 18px;" :class="item.icon"></i>
+                    <div style="margin-top: 10px;">{{ $lang(item.title) }}</div>
+                </a-col>
+                <a-col :xs="4" :sm="4" :md="2" :lg="2" v-if="quickMenu.editable" class="text-center pointer menu-item" @click="quickMenu.visible=true;quickMenu.type='add';">
+                    <i style="font-size: 18px;" class="fa fa-plus"></i>
+                    <div style="margin-top: 10px;">{:lang('Add')}</div>
+                </a-col>
+                <a-empty v-if="quick_menu_list.length == 0 && !quickMenu.editable"></a-empty>
+            </a-row>
+        </div>
+    
+        <a-row :gutter="16" class="module">
+            {:widget('dashbord_before_total')}
+            <a-col :span="24" style="margin: 10px 0;">
+                <div>
+                    <yi-date-picker v-model="form.start" style="display: inline-block;"></yi-date-picker>
+                    <span> - </span>
+                    <yi-date-picker v-model="form.end" style="display: inline-block;"></yi-date-picker>
+                    <a-button type="danger" @click="handleRefresh">{:lang('Refresh')}</a-button>
+                </div>
+            </a-col>
+            
+            <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                <a-card :title="$lang('Website traffic')">
+                    <div id="chart-demo" style="height: 400px;"></div>
+                </a-card>
+            </a-col>
+
+            <a-col :xs="24" :sm="24" :md="12" :lg="12">
+                <a-card title="Top10" class="top10">
+                    <a-radio-group button-style="solid" v-model="currentTop10Type" :options="top10Options"></a-radio-group>
+                    <ul v-if="currentTop10Type == 'indexIpTop10'">                    
+                        <li v-for="(item,index) in data[currentTop10Type]" :key="index">
+                            <span :class="top10Query.page == 1 && index < 3 ? 'top-3' : ''" class="sort">{{index + 1}}</span> <span>{{item.ip}}</span>
+                            <span class="total">{{item.total}}</span>
+                        </li>
+                    </ul>
+                    <ul v-else>
+                        <li v-for="(item,index) in data[currentTop10Type]" :key="index">
+                            <span :class="top10Query.page == 1 && index < 3 ? 'top-3' : ''" class="sort">{{index + 1}}</span> <a target="_blank" :href="item.url" class="title line-1">{{item.url}}</a>
+                            <span class="total">{{item.total}}</span>
+                        </li>
+                    </ul>
+                    
+                </a-card>
+            </a-col>
+            {:widget('dashbord_after_total')}
+        </a-row>
+    
+        <a-row :gutter="16" class="module">
+            {:widget('dashbord_before_card_item')}
+            <a-col :xs="24" :sm="24" :md="6" :lg="6">
+                <a-card :title="$lang('System Info')">
+                    <p><span>{:lang("OS")}：</span> <span>{$data.uname}</span> </p>
+                    <p><span>{:lang("PHP Version")}：</span> <span>{$data.phpversion}</span> </p>
+                    <p><span>{:lang("MYSQL Version")}：</span> <span>{$data.mysql}</span> </p>
+                    <p><span>{:lang("Upload Size")}：</span> <span>{$data.upload_size}</span> </p>
+                    <p><span>{:lang("Memory Used")}：</span> <span>{$data.memory|raw}</span> </p>
+                    <p><span>{:lang("System Version")}：</span><span>{:get_version()}</span>
+                    <a href="https://www.01soft.top" target="_blank">{:lang("Check for updates")}</a></p>
+                </a-card>
+            </a-col>
+            {:widget('dashbord_after_card_item')}
+        </a-row>
+    
+        {:widget('dashbord_after_content')}
+    
+        <a-modal :title="$lang('Setting')" v-model="quickMenu.visible" @ok="handleSetQuickMenu" @cancel="resetMenuForm">
+            <a-form :label-col="{span: 6}" :wrapper-col="{span:18}">
+                <a-form-item :label="$lang('Link')">
+                    <a-input-group compact>
+                        <a-input style="width: 60%" v-model="quickMenu.form.url"></a-input>
+                        <yi-select style="width: 40%" url="/system/admin/auth_rule/tree_list?type=1" :set-default="false" @change="handleMenuChange" label-field="title_txt" value-field="name"></yi-select>
+                    </a-input-group>
+                </a-form-item>
+                <a-form-item :label="$lang('Title')">
+                    <a-input v-model="quickMenu.form.title"></a-input>
+                </a-form-item>
+                <a-form-item :label="$lang('Icon')">
+                    <div class="input-group">
+                        <a-input v-model="quickMenu.form.icon" class="form-control"></a-input>
+                        <div class="input-group-append">
+                            <a-button @click="$refs['ref-icon'].show()">
+                                <yi-icon ref="ref-icon" v-model="quickMenu.form.icon"></yi-icon>
+                            </a-button>
+                        </div>
+                    </div>
+                </a-form-item>
+                <a-form-item :label="$lang('New Window')">
+                    <a-switch v-model="quickMenu.form.new"></a-switch>
+                </a-form-item>
+                <a-form-item :label="$lang('Area')" v-show="quickMenu.form.new">
+                    <a-input v-model="quickMenu.form.area"></a-input>
+                </a-form-item>
+                <a-form-item :label="$lang('Sort')">
+                    <a-input v-model="quickMenu.form.weigh"></a-input>
+                </a-form-item>
+            </a-form>
+        </a-modal>
+
+    </div>
+</template>
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+{/block}

@@ -1,0 +1,30 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        <div class="btns">
+            <a-button @click="init">
+                <a-icon type="reload" />
+            </a-button>
+            <a-button v-if="multiple && selectedRowKeys.length > 0" type="primary" @click="handleSelect">{:lang('Choose')}</a-button>
+            {:widget('after_btns')}
+        </div>
+
+        <a-table class="table" :columns="c_columns" :data-source="data"
+            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" :pagination="false"
+            :loading="loading">
+            <template slot="action" slot-scope="row">
+                <a href="javascript:;" @click="handleSelectOne(row)">{:lang('Choose')}</a>
+            </template>
+        </a-table>
+        <a-pagination v-if="pagination.total" v-model="query.page" :total="pagination.total" :page-size.sync="query.page_size" show-size-changer show-quick-jumper :show-total="function(total, range) {return $lang('%d records', total);}" :page-size-options="pagination.page_size_options"></a-pagination>
+        </a-pagination>
+    </div>
+</template>
+{/block}
+{block name="style"}
+{:widget('style')}
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+{/block}

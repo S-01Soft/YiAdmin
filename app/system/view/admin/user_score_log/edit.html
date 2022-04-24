@@ -1,0 +1,48 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('before_content')}
+        <div class="form-tab">
+            <a-tabs v-if="Object.keys(tabs).length > 1" type="card" v-model="activeTab">
+                <a-tab-pane v-for="(item,key) in tabs" :key="key" :tab="item"></a-tab-pane>
+            </a-tabs>
+        </div>
+        <a-form-model class="form" ref="ruleForm" :model="form" :rules="rules" :label-col="{span: 3}" :wrapper-col="{span: 18}">
+            {:widget('before_form_item')}
+            <div v-show="activeTab == 'base'">
+            <a-form-model-item prop='user_id' label='会员ID'>
+                <a-input-number v-model='form.user_id' step='1'></a-input-number>
+            </a-form-model-item>
+            <a-form-model-item prop='score' label='变更积分'>
+                <a-input-number v-model='form.score' step='1'></a-input-number>
+            </a-form-model-item>
+            <a-form-model-item prop='before' label='变更前积分'>
+                <a-input-number v-model='form.before' step='1'></a-input-number>
+            </a-form-model-item>
+            <a-form-model-item prop='after' label='变更后积分'>
+                <a-input-number v-model='form.after' step='1'></a-input-number>
+            </a-form-model-item>
+            <a-form-model-item prop='memo' label='备注'>
+                <a-input placeholder='请输入备注' v-model='form.memo'></a-input>
+            </a-form-model-item>
+        </div>
+            
+            {:widget('after_form_item')}
+            <a-form-item class="fixed-bottom-btn-group" :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button class="btn" :loading="btnLoading" type="primary" @click="onSubmit">提交</a-button>
+                <a-button class="btn" @click="onCancel">取消</a-button>
+            </a-form-item>
+        </a-form-model>    
+        {:widget('after_content')}
+    </div>
+</template>
+{:widget('after_body')}
+{/if}
+{/block}
+{block name="style"}
+{:widget('style')}
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+{/block}

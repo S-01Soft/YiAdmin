@@ -1,0 +1,10 @@
+{if !empty($groups)}
+<div style="margin-bottom: 10px;">
+    <b>{:lang('Role')}：</b>
+    <a-radio-group v-model="query.group_id">
+        {foreach $groups as $vo}
+        <a-radio-button :value="{$vo.group_id}">{$vo.name}</a-radio-button>
+        {/foreach}
+    </a-radio-group>
+</div>
+{/if}

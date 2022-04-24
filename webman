@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php
+use Webman\Console\Command;
+
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/support/bootstrap.php';
+
+$cli = new Command();
+$cli->setName('webman cli');
+$cli->installInternalCommands();
+if (is_dir($command_path = app_path(). '/command')) {
+    $cli->installCommands($command_path);
+}
+if (is_dir($command_path = base_path() . DS .  'yi' . DS . 'command')) {
+    $cli->installCommands($command_path, 'yi\\command');
+}
+
+foreach (scandir(app_path()) as $dir) {
+    if (in_array($dir, ['.', '..'])) continue;
+    $info_file = app_path() . DS . $dir . DS . 'info.ini';
+    if (!file_exists($file) || !file_exists($info_file)) continue;
+    $info = parse_ini_file($info_file);
+    if (!$info) continue;
+    if (empty($info['status'])) continue;
+    if (is_dir($command_path = app_path() . DS . $dir . DS . 'command')) {
+        $cli->installCommands($command_path, 'app\\' . $dir  . '\\command');
+    }
+}
+
+$cli->run();

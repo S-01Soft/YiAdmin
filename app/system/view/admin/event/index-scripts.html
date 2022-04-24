@@ -1,0 +1,75 @@
+<script>
+    Yi.event.on(EventPrefix + 'Columns', function(data) {
+        for (var i = 0; i < data.length; i ++) {
+            var item = data[i], key = item.key;
+            if (key == 'group') {
+                item.search = {
+                    type: 'input', value: null, s: 'like'
+                }
+            }
+            if (key == 'event') {
+                item.search = {
+                    type: 'input', value: null, s: 'like'
+                }
+            }
+            if (key == 'event_desc') {
+                item.search = {
+                    type: 'input', value: null, s: 'like'
+                }
+            }
+        }
+        Yi.util.insertAfter(data, {key: 'event_desc'}, {
+            title: $lang('Status'), dataIndex: 'event_app', key: 'event_app', customRender: function(val, row, index, column) {
+                var count = 0;
+                for (var i = 0; i < row.event_app.length; i ++) {
+                    if (row.event_app[i].status) count ++;
+                }
+                var el = "<div>" + $lang('%d actions, %d running', row.event_app.length, count) + "</div>";
+                return Yi.render.html(val, row, index, column, el);
+            }
+        })
+        return data;
+    });
+
+    Yi.vue.mixin({
+        data: function() {
+            return {
+                app: '',
+                activeRow: {},
+                handleGetData: function(data) {
+                    return [{name: '', title: $lang('All')}].concat(data);
+                }
+            }
+        },
+        methods: {
+            handleAppChange: function(v, data) {
+                for (var i = 0; i < data.length; i ++) {
+                    if (v == data[i].name) {
+                        this.activeRow = data[i];
+                        break;
+                    }
+                }
+            },
+            refreshEvents: function() {
+                var that = this;
+                this.$http.post(get_url('refresh')).then(function() {
+                    that.$message.success(("{:lang('Operate successful')}"));
+                    that.init();
+                });
+            },
+            reloadEvents: function() {
+                var that = this;
+                this.$http.post(get_url('reload'), {app: this.app}).then(function() {
+                    that.$message.success(("{:lang('Operate successful')}"));
+                    that.init();
+                });
+            },
+            handleShowListeners: function(row) {
+                Yi.open({
+                    title: '{:lang("View")}',
+                    content: '/system/admin/event_apps/index?event=' + row.event
+                })
+            }
+        }
+    });
+</script>

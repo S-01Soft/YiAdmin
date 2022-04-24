@@ -1,0 +1,230 @@
+* {
+    font-size: 13px;
+}
+
+html, body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    background: #fdfdfd;
+}
+
+input,button,select,textarea{ outline:none;}
+
+
+input {
+    border: 1px solid;
+}
+
+table {
+    margin: 15px 0;
+}
+
+.table-border th, .table-border td {
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+}
+
+.ant-table-tbody>tr>td {
+    padding: 12px;
+}
+
+.ant-form-item-control .btn {
+    margin: 5px;
+}
+
+::-webkit-scrollbar-track-piece {
+    background-color:#f8f8f8;
+}
+::-webkit-scrollbar {
+    width:5px;
+    height:9px;
+    border-radius: 2px;
+}
+::-webkit-scrollbar-thumb {
+    background-color:#dddddd;
+    background-clip:padding-box;
+    min-height:28px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color:#bbb;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+
+ul,li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.content {
+    padding: 15px 20px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.hide, .hidden {
+    display: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-success {
+    color: #18bc9c;
+}
+
+.text-danger {
+    color: #ff4d4f;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.btn-default {
+    color: #fff;
+    background-color: #1890ff;
+    border-color: #1890ff;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+}
+
+.btn-xs, .btn-group-xs > .btn {
+    padding: 1px 5px;
+    font-size: 11px;
+    line-height: 1.5;
+    border-radius: 2px;
+}
+
+.table {
+    width: 100%;
+}
+
+.clear::after {
+    content: ' ';
+    clear: both;
+}
+
+.line-1 {
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.line-2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;  /* 超出n行这里写n */
+    -webkit-box-orient: vertical;
+}
+
+.line-3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;  /* 超出n行这里写n */
+    -webkit-box-orient: vertical;
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.input-group .form-control {
+    flex: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.input-group-append {
+    display: flex;
+    margin-left: -1px;
+}
+
+.input-group-append .ant-btn:not(:last-child), .input-group-append .input-group-btn:not(:last-child) {
+    border-radius: 0;
+}
+.input-group-append .ant-btn:last-child, .input-group-append .input-group-btn:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.fixed-bottom-btn-group {
+    z-index: 999;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: #f8f8f8;
+    margin-bottom: 0;
+    padding: 10px 0;
+}
+
+.form {
+    margin-bottom: 65px;
+}
+
+.inline {
+    display: inline;
+}
+
+.layui-nav-item .nav-item-has-tree {
+    background-color: #23262E;
+}
+
+.bootstrap-table .loading-text {
+    font-size: 13px!important;
+}
+
+.bootstrap-table .fixed-table-loading {
+    border-collapse: collapse;
+    border-top: none;
+}
+

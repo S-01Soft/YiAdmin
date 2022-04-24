@@ -1,0 +1,24 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('before_content')}
+        <yi-option ref="refOption" :value="data" @add-form-item="handleAddFormItem" :show-remove="true" @delete-form-item="handleDeleteFormItem"></yi-option>
+        <a-form>
+            <a-form-item class="fixed-bottom-btn-group" :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button @click="handleShowConfigItem" class="btn" type="danger">{:lang('Add Config')}</a-button>
+                <a-button @click="OnSubmitClose" class="btn" type="danger">{:lang('Save And Close')}</a-button>
+                <a-button class="btn" type="primary" @click="onSubmit">{:lang('Save')}</a-button>
+                <a-button class="btn" @click="onCancel">{:lang('Cancel')}</a-button>
+            </a-form-item>
+        </a-form>
+        {:widget('after_content')}
+    </div>
+</template>
+{/block}
+{block name="style"}
+{:widget('style')}
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+{/block}

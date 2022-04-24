@@ -1,0 +1,39 @@
+
+{php}
+    if (!function_exists('get_sub_menus')) {
+        function get_sub_menus($sub_menu_list) {
+{/php}
+    {foreach $sub_menu_list as $item}
+        {php}
+            if ($item['ismenu'] == 0) continue;
+            $redirect_url = null;
+            $sub_menu_count = 0;
+            if (!empty($item['childlist'])) {
+                foreach ($item['childlist'] as $v) {
+                    if ($v['ismenu']) {
+                        if (!$redirect_url) $redirect_url = $v['name'];
+                        $sub_menu_count ++;
+                    }
+                }
+            }
+            $has_tree = $sub_menu_count > 1 ? true : false;
+        {/php}
+        {if $has_tree}
+        <a-sub-menu key="{$redirect_url}" data-key="{$redirect_url}">
+            <span slot="title"> {if !empty($item['icon'])} <i class="left-menu-item {$item.icon}"></i> {/if} {$item['title_txt']}</span>
+            {:get_sub_menus($item['childlist'])}
+        </a-sub-menu>
+        {else}
+        <a-menu-item key="{$redirect_url ?: $item['name']}" class="nav-link" @click="handleMenuClick" data-url="{$redirect_url ?: $item['name']}" data-title="{$item['title']}">
+            <span> {if !empty($item['icon'])}<i class="left-menu-item {$item.icon}"></i> {/if} {$item['title_txt']}</span>
+        </a-menu-item>
+        {/if}
+    {/foreach}
+{php}
+        }
+    }
+{/php}
+
+{php}
+get_sub_menus($menu_list);
+{/php}

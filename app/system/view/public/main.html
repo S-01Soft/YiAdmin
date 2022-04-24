@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+{php}$system=get_module_config('system');{/php}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{:lang($system['title'])}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {include file="public/header" /}
+
+    <link rel="stylesheet" href="{$config.statics.maps.antdcss|default='/static/ant/antd.min.css'}">
+
+    <style>
+        #layout-top-side .logo {
+            width: 200px;
+            color: #fff;
+        }
+        #layout-top-side .top-side-left {
+            width: 200px;
+            float: left;
+            text-align: center;
+        }
+        .ant-layout-header {
+            padding: 0;
+        }
+        .site-name {
+            color: #ddd;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .ant-menu-horizontal .top-menu-colse {
+            position: absolute;
+            margin-left: 0;
+            top: 7px;
+            right: -5px;
+        }
+
+        #layout-top-side .top-side-right {
+            float: right;
+            margin-right: 15px;
+        }
+        .menu-toggle svg {
+            height: 100%;
+        }
+        .h100 {
+            height: 100%;
+        }
+    </style>
+    {:widget('main-style')}
+    {include file="public/config" /}
+</head>
+<body>    
+    <div id="main-app" class="h100" v-cloak>
+        <a-locale-provider :locale="lang">
+            <app></app>
+        </a-locale-provider>
+    </div>
+    <template id="app">
+        <div class="h100">
+            <a-layout class="h100" id="layout-top-side">
+                <a-layout-header class="header">
+                    <div class="top-side-left" v-show="leftWidth" :style="{width: leftWidth + 'px'}">
+                        <div class="site-name line-1">
+                            {:lang($system['title'])}
+                        </div>
+                    </div>
+                    <div class="top-side-center" :style="{marginLeft: leftWidth + 'px'}">
+                        <a-row>
+                            <a-col :xs="24" :sm="24" :md="18" :lg="20">
+                                <a-menu theme="dark" mode="horizontal" :selected-keys="[activeIframe]" :style="{ lineHeight: '64px' }">
+                                    <a-menu-item @click="handleMenuCollapse" class="menu-toggle"> <a-icon type="ordered-list"></a-icon> </a-menu-item>
+                                    <a-menu-item @click="handleClickTopMenuItem(url)" v-for="(title, url) in iframes" :key="url"
+                                        @mouseenter.native="handleTopMenuMouseEnter(url)" @mouseleave.native="hoverUrl = null"
+                                        :class="activeIframe && url == activeIframe ? 'active': ''">
+                                        {{ $lang(title) }}
+                                        <a-icon @click.stop="handleRemoveTopMenuItem(url, title)" v-show="hoverUrl == url && url != dashbordUrl" type="close" class="top-menu-colse"></a-icon>
+                                    </a-menu-item>
+                                    <a-menu-item @click="handleClearTopMenu" v-show="Object.keys(iframes).length > 1"> <span>{:lang('Close')}</span> </a-menu-item>
+                                </a-menu>
+                            </a-col>
+                            <a-col :xs="0" :sm="0" :md="6" :lg="4">
+                                <div class="top-side-right">
+                                    <a target="_blank" style="color:#ffffffa6;margin: 0 4px;" href="/"><i class="fa fa-home"></i></a>
+                                    <a @click="handleRestartSystem" :title="$lang('Restart System')" style="color:#ffffffa6;margin: 0 4px;"><i class="fa fa-power-off"></i></a>
+                                    <a-dropdown>
+                                        <a class="fa fa-language pointer" style="color: #ffffffa6;margin: 0 4px;"></a>
+                                        <a-menu slot="overlay">
+                                            {php} $langs = get_module_group_config('system', 'base')['langs']; {/php}
+                                            {foreach $langs as $k => $v}
+                                            <a-menu-item @click="changeLang('{$k}')" class="text-center">
+                                                <span style="{$k == $config['lang'] ? 'font-weight: 700' : ''}">{$v}</span>
+                                            </a-menu-item>
+                                            {/foreach}
+                                        </a-menu>
+                                    </a-dropdown>
+                                    <a href="/system/admin/module/option?name=system" class="open-dialog" style="color: #ffffffa6;margin: 0 4px;" title="{:lang('System Config')}"><i class="fas fa-cogs"></i></a>
+                                    <a-dropdown>
+                                        <a @click="function(e) {e.preventDefault()}">{$admin->nickname} <a-icon type="down"></a-icon></a>
+                                        <a-menu style="margin-top: 10px;" slot="overlay">
+                                            {:widget('main-right-menu')}
+                                            <a-menu-item @click="handleLogout"><span>{:lang("Log Out")}</span></a-menu-item>
+                                        </a-menu>
+                                    </a-dropdown>
+                                </div>
+                            </a-col>
+                        </a-row>
+                    </div>
+                </a-layout-header>
+                <a-layout>
+                    <a-layout-sider :width="leftWidth"
+                        :style="{ overflow: 'auto', height: asideMenuHeight, position: 'fixed', left: 0 }">
+                        <yi-menu ref="menuRef" :selected-keys="[activeIframe]" :open-keys.sync="openKeys" @menu-click="handleMenuClick"></yi-menu>
+                    </a-layout-sider>
+                    <a-layout :style="{ marginLeft: leftWidth + 'px' }">
+                        <a-layout-content :style="{ background: '#fff', padding: 0, margin: 0, minHeight: contentHeight }" style="height: 100%;">
+                            <div class="iframes h100" v-for="url in activeUrls" :key="url" v-show="url == activeIframe">
+                                <iframe style="width: 100%;height: 100%;border: none;" :src="url"></iframe>
+                            </div>
+                        </a-layout-content>
+                    </a-layout>
+                </a-layout>
+            </a-layout>
+            {:widget('main-content')}
+        </div>
+    </template>
+    <script src="/static/js/common.js?v={$config.statics.version|default=time()}"></script>
+    <script type="text/javascript" src="/static/js/yi.js?v={$config.statics.version|default=time()}"></script>
+    <script src='{$config.statics.open && !empty($config.statics.maps.require) ? $config.statics.maps.require : "/static/library/requirejs/require.js"}' data-main="/static/js/system.js?v={$config.statics.version|default=time()}"></script>
+    {:widget('component')}
+    {:widget('main-scripts')}
+</body>
+
+</html>

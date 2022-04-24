@@ -1,0 +1,222 @@
+{extend name="admin/public/layout" /}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('before_content')}
+        <div class="clearfix">
+            {if $auth->check('/system/admin/module/refresh', $auth->id)}
+            <a-button @click="handleRefresh"><a-icon type="reload"></a-icon> {:lang('Refresh Module')}</a-button>
+            {/if}
+            {if config('module.local')}
+            <yi-upload accept=".zip" :show-group="false" :loading="false" :show-error="false" @upload="handleFileUpload" style="display:inline-block;margin-right: 10px;" action="/system/admin/module/upload" @response="handleInstall">
+                <a-button type="danger">{:lang("Offline Install")}</a-button>
+            </yi-upload>
+            {/if}
+            {if config('module.remote')}
+            <a-radio-group v-model="query.type">
+                <a-radio-button :value="1">{:lang("Local Modules")}</a-radio-button>
+                <a-radio-button :value="2">{:lang("Appstore")}</a-radio-button>
+            </a-radio-group>
+            <a-button @click="handleShowLogin" type="danger" :loading="btn_login_loading">{:lang("User Info")}</a-button>
+            {/if}
+            <a-input v-if="query.type == 1" @change="handleLocalSearch" style="width: 180px;float: right"></a-input>
+            <a-input v-if="query.type == 2" :placeholder="$lang('Please enter keywords and press enter to search')" v-model="query.where.kw" @keypress.enter="init" style="width: 180px;float: right;"></a-input>
+        </div>
+        <a-row v-show="query.type == 1">
+            <a-col class="item" :xs="24" :sm="12" :md="6" :lg="4" v-for="(item, index) in list" :key = "index" v-show="item.visible!==false || !isSearch">
+                <div class="item-content">
+                    <div class="item-title line-1" :title="item.title">
+                        <span style="font-size: 15px;">{{ $lang(item.title) }}</span>
+                        <span style="position: absolute;right: 15px;">{{ $lang(item.version) }}</span>
+                    </div>
+                    <div class="item-body">
+                        <div class="item-desc line-1 mb-1" :title="item.desc">
+                            {{ $lang(item.desc) }}
+                        </div>
+                        <div class="item-desc line-1 mtb-1">
+                            <a-tag color="orange">{{item.author}}</a-tag>
+                            <input style="width: 55px;float: right;border: 1px solid #ddd;" class="no-border" type="number" v-model="item.sort" @change="handleWeigh(item)">
+                        </div>
+                        <div class="mtb-1">
+                            <yi-switch v-model="item.status" @change="handleStatusChange(index, item)"></yi-switch>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <span class="pointer" style="margin-right: 8px;" @click="handleSetConfig(index, item)">{:lang("Config")}</span>
+                            <a-popconfirm
+                                v-if="item.status == 0"
+                                placement="bottom"
+                                :title="$lang('Are you sure to uninstall the module?')"
+                                @confirm="handleUninstall(index, item)"
+                            >
+                                <span class="pointer text-danger">{:lang("Uninstall")}</span>
+                            </a-popconfirm>
+                        </div>
+
+                    </div>
+                </div>
+            </a-col>
+            <a-empty v-if="list.length == 0"></a-empty>
+        </a-row>
+        <a-row v-show="query.type == 2">
+            <div class="mt-1">
+                <span class="tab" :class="query.where.tag == v ? 'active' : ''" v-for="(v,i) in tags" :key="i" @click="handleTabClick(v)">{{v}}</span>
+            </div>
+            <a-col class="item" :xs="24" :sm="12" :md="4" v-for="(item, index) in list" :key = "index">
+                <div class="item-content">
+                    <div class="item-title line-1 mb-1">
+                        <a style="font-size: 15px;color: #000000a6;" target="_blank" :href="'{:config('app.api_url')}/appstore/show/' + item.name + '.html'" :title="item.title">{{ $lang(item.title) }}</a>
+                        <span style="position: absolute;right: 15px;">{{ $lang(item.version) }}</span>
+                    </div>
+                    <div class="item body">
+                        <div class="item-desc line-1 mb-1" :title="item.desc">
+                            {{ $lang(item.desc) }}
+                        </div>
+                        <div class="line-1 mtb-1">
+                            <a-tag color="orange">{{item.poster && item.poster.nickname}}</a-tag>
+                        </div>
+                        <div class="mtb-1" v-if="!localModules[item.name] || (localModules[item.name] && localModules[item.name].version != item.version)">                            
+                            <a-dropdown-button v-if="item.items.length > 1" type="danger" size="small" @click="handleRemoteInstall(item.name, item.version)">
+                                <span style="font-size:14px;">{{localModules[item.name] ? $lang('Upgrade') : $lang('Install')}}</span>
+                                <a-menu slot="overlay">
+                                <a-menu-item @click="handleRemoteInstall(item.name, v.version)" v-for="(v,k) in item.items" :key="k"></a-icon> {{v.version}} </a-menu-item>
+                                </a-menu>
+                                <a-icon slot="icon" type="down" />
+                            </a-dropdown-button>
+                            <a-button v-else type="danger" size="small" @click="handleRemoteInstall(item.name, item.version)">{{localModules[item.name] ? $lang('Upgrade') : $lang('Install')}}</a-button>
+                        </div>
+                        <div class="mtb-1 text-success" style="height: 24px;line-height: 24px;color:#28a745;font-weight: bold;" v-else>
+                            {:lang('Installed')} 
+                        </div>
+                    </div>
+                </div>
+            </a-col>
+            <a-empty v-if="list.length == 0"></a-empty>
+        </a-row>
+        <a-pagination v-show="query.type == 2" v-model="pagination.current_page" :total="pagination.total" :page-size="pagination.page_size" @change="handlePageChange"></a-pagination>
+
+        <a-modal v-model="login_visible" :title="$lang('User Info')" @ok="handleLogin" :confirm-loading="confirmLoading">
+            <div v-if="userinfo">
+                <a-alert type="success">
+                    <div slot="description">
+                        <span> {{ $lang('Welcome :name, You are signed in', {name: userinfo.nickname}) }} </span>
+                        <a @click="handleLogout">{:lang('Log Out')}</a>
+                    </div>
+                </a-alert>
+            </div>
+            <a-form :label-col="{span: 4}" :wrapper-col="{span: 18}" v-else>
+                <a-alert type="error" message="{:lang('Please Login')}" style="margin-bottom: 15px;"></a-alert>
+                <a-form-item label="{:lang('Username')}">
+                    <a-input v-model="loginForm.username" :placeholder="$lang('Username')"></a-input>
+                </a-form-item>
+                <a-form-item label="{:lang('Password')}">
+                    <a-input v-model="loginForm.password" type="password" :placeholder="$lang('Password')"></a-input>
+                </a-form-item>
+                <a-form-item label="{:lang('Validate Code')}" v-if="loginForm.code != null">
+                    <template slot="extra">
+                        <div class="text-danger">{{login.message}}</div>
+                    </template>
+                    <a-input v-model="loginForm.code" :placeholder="$lang('Validate Code')"></a-input>
+                </a-form-item>
+            </a-form>
+        </a-modal>
+
+        <a-modal title="查看进度" :mask-closable="false" :footer="null" :closable="false" v-model="process.show" class="process-modal">
+            <ul class="process-content">
+                <li class="process-item" v-for="(item,index) in process.list" :key="index">
+                    <pre :class="item.type == 'error' ? 'text-danger' : ''">{{item.message}}</pre>
+                </li>
+            </ul>
+            <div v-if="process.closable" class="text-center" style="padding: 10px 0;">
+                <a-button type="danger" @click="process.show=false;process.list=[];process.closable=false;">关闭</a-button>
+            </div>
+        </a-modal>
+
+        {:widget('after_content')}
+    </div>
+</template>
+{/block}
+{block name="style"}
+<style>
+    
+    .process-modal .ant-modal-body {
+        padding: 0;
+    }
+    .process-modal .process-content {
+        max-height: 400px;
+        height: 100%;
+        overflow-y: scroll;
+        padding: 10px;
+        background: #001529;
+        color: #f5f5f5;
+    }
+
+    .process-item {
+        padding: 5px;
+    }
+    .process-item::after {
+        content: " ";
+        display: block;
+        border-bottom: 1px solid #7d7a7a;
+        margin-top: 8px;
+    }
+     
+    .item {
+        padding: 10px 5px;
+    }
+
+    .item .item-content {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px #eee;
+    }
+
+    .item .item-body {
+        padding: 5px 5px 10px 5px;
+    }
+
+    .item .item-title {
+        padding: 0 10px;
+        background: #e2ebf4;
+        text-align: left;
+        color: rgba(0,0,0,.65);
+        font-weight: 600;
+        font-size: 14px;
+        height: 48px;
+        line-height: 48px;
+        box-sizing: border-box;
+    }
+    .item .item-desc {
+        font-size: 13px;
+        color: #555;
+    }
+
+    .tab {
+        margin: 3px;
+        cursor: pointer;
+        display: inline-block;
+        padding: 4px 5px;
+        color: #3f73a7;
+    }
+    .tab.active {
+        background-color: #1890ff;
+        border: 1px solid #1890ff;
+        border-radius: 4px;
+        color: #fff;
+    }
+
+    .mtb-1 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .mb-1 {
+        margin-bottom: 5px;
+    }
+    .mt-1 {
+        margin-top: 5px;
+    }
+</style>
+{:widget('style')}
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+{/block}
