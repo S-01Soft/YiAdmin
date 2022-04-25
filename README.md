@@ -20,7 +20,13 @@ DB_PREFIX = yi_
 SERVER_LISTEN = http://0.0.0.0:8787
 CHANNEL_PORT = 2206
 ```
+## 启动
+windows `php win.php` 或 `php win.php dev`
+linux `php start.php start -d` 或 `php start.php start`
 访问后台：http://127.0.0.1:8787/system
+
+## 预览
+![输入图片说明](images/image.png)
 
 ## 官网
 
