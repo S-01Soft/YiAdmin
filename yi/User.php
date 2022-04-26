@@ -32,6 +32,7 @@ class User extends \yi\library\Auth
     {   
         if ($this->isLogined) return true;
         $t = Token::init();
+
         $data = $t->get($token);
         if (!$data) return false;
         $user_id = intval($data['user_id']);
@@ -48,7 +49,6 @@ class User extends \yi\library\Auth
             $this->_user = $user;
             $this->isLogined = true;
             $this->_token = $token;
-
             return true;
         } else {
             $this->setError(lang('You are not logged in'));

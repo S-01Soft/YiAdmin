@@ -23,6 +23,8 @@ class Auth
         'scene' => 'auth',
     ];
 
+    protected $isLogined = false;
+    
     protected $groups = [];
 
     protected $_auth_list = [];
@@ -219,6 +221,7 @@ class Auth
 
     public function isLogin()
     {
+        if ($this->isLogined) return true;
         if (session($this->config['scene'])) return true;
         return false;
     }

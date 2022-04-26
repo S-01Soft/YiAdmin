@@ -20,16 +20,20 @@ DB_PREFIX = yi_
 SERVER_LISTEN = http://0.0.0.0:8787
 CHANNEL_PORT = 2206
 ```
+
 ## 启动
 
-windows `php win.php` 或 `php win.php dev`
+系统以常驻内存方式运行，需要在项目根目录下通过命令行启动
 
-linux `php start.php start -d` 或 `php start.php start`
+`windows`: 
+1.  `php win.php` 安装模块时请通过该方式启动
+2. `php win.php dev` 开发调试时通过该方式启动，文件修改时自动重启
+
+`linux`: 
+1.  `php start.php -d`
+2. `php start.php`
 
 访问后台：http://127.0.0.1:8787/system
-
-## 预览
-![输入图片说明](images/01soft.png)
 
 ## 官网
 

@@ -39,6 +39,6 @@ abstract class ApiController extends BaseController
 
     protected function error($message = '', $code = 10000, $data = [])
     {
-        return $this->error($message, $code, $data, 'json');
+        return error($message, $code, $data, 'json');
     }
 }

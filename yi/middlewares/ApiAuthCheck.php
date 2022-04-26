@@ -18,13 +18,17 @@ class ApiAuthCheck implements MiddlewareInterface
         $noNeedCheck = $class->noNeedCheck;
 
         $action = $request->action;
+        $token = $request->header('token') ?: $request->input('token');
         $user = \yi\User::instance();
+        $user->init($token);
         $request->user = $user;
         $payload = (object) [
             'controller' => $class,
-            'class_name' => $class_name
+            'class_name' => $class_name,
+            'response' => null
         ];
         event('BeforeApiAuthCheck', $payload);
+        if (is_a($payload->response, Response::class)) return $payload->response;
         if (in_array($action, $noNeedLogin) || in_array('*', $noNeedLogin)) return $next($request);
         if (in_array($action, $needLogin) || in_array('*', $needLogin)) {
             if (!$user->isLogin()) return error('您未登录', 9999, [], 'json'); 

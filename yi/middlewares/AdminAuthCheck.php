@@ -23,9 +23,11 @@ class AdminAuthCheck implements MiddlewareInterface
         $request->admin = $admin;
         $payload = (object) [
             'controller' => $class,
-            'class_name' => $class_name
+            'class_name' => $class_name,
+            'response' => null
         ];
         event('BeforeAdminAuthCheck', $payload);
+        if (is_a($payload->response, Response::class)) return $payload->response;
         if (in_array($action, $noNeedLogin) || in_array('*', $noNeedLogin)) return $next($request);
         if (in_array($action, $needLogin) || in_array('*', $needLogin)) {
             if (!$admin->isLogin()) {

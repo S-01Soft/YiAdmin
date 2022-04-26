@@ -31,6 +31,7 @@ class Token
     {
         $data = $this->handler->where('token', $this->entryToken($token))->where('scene', $this->config['scene'])->first();
         if ($data) {
+            $data = collect($data)->toArray();
             if (!$data['expiretime'] || $data['expiretime'] > time()) {
                 $data['token'] = $token;
                 $data['expires_in'] = $this->getExpiredIn($data['expiretime']);
