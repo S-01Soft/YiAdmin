@@ -188,7 +188,7 @@ function get_user()
 
 function get_ip()
 {
-    return request() ? request()->getRemoteIp() : '127.0.0.1';
+    return request() ? request()->getRealIp() : '127.0.0.1';
 }
 
 function refresh_module_config()
