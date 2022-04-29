@@ -128,15 +128,13 @@ class Index extends Base
         $controller = request()->get('c');
         $modulePath = app_path() . DS . $module . DS;
         
-        $langDirs = [];
-        foreach (get_full_module_list() as $info) {
-            $langDirs[] = app_path() . DS . $info['name'] . DS . 'lang' . DS;
-        }
         $lang = request()->var('lang');
-        $lang->loadDirs(array_merge($langDirs, [
-            $modulePath . 'lang' . DS, 
+        
+        $dirs = [
+            base_path() . DS . 'translations' . DS,
             $modulePath . 'lang' . DS . snake_controller($controller, DS) . DS,
-        ]));
+        ];
+        $lang->loadDirs($dirs);
         $offset = config('app.debug') ? 0 : 30 * 60 * 60 * 24;
         $response = jsonp(json_encode($lang->get(), JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE), 'define');
         $response->withHeaders([

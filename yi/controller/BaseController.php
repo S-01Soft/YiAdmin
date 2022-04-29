@@ -62,15 +62,11 @@ abstract class BaseController
     
     protected function loadlang()
     {
-        $langDirs = [];
-        foreach (get_full_module_list() as $info) {
-            $langDirs[] = app_path() . DS . $info['name'] . DS . 'lang' . DS;
-        }
-        $modulePath = app_path() . DS . request()->getModule() . DS;
-        request()->var('lang')->loadDirs(array_merge($langDirs, [
-            $modulePath . 'lang' . DS, 
-            $modulePath . 'lang' . DS . snake_controller(request()->getController(), DS) . DS
-        ]));
+        $dirs = [
+            base_path() . DS . 'translations' . DS,
+            app_path() . DS . request()->getModule() . DS . 'lang' . DS . snake_controller(request()->getController(), DS) . DS
+        ];
+        request()->var('lang')->loadDirs($dirs);
     }
 
     protected function assignconfig()

@@ -26,6 +26,7 @@ abstract class ApiController extends BaseController
             'controller' => $this
         ];
         event('BeforeApiController', $payload);
+        $this->loadlang();
     }
 
     public function after()

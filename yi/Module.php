@@ -167,6 +167,7 @@ class Module
         $dir = app_path() . DS . $name . DS . 'public';
         if (is_dir($dir)) copy_files($dir, public_path());
         app(\yi\EventLib::class)->enable($name);
+        self::refreshLang();
         $class = "\\app\\{$name}\\Plugin";
         if (class_exists($class)) $class::enable();
         event('RefreshLangVersion');
@@ -181,6 +182,7 @@ class Module
         $info['status'] = 0;
         set_module_info($name, $info);
         app(\yi\EventLib::class)->disable($name);
+        self::refreshLang();
         $class = "\\app\\{$name}\\Plugin";
         if (class_exists($class)) $class::disable();
         event('RefreshLangVersion');
@@ -295,6 +297,28 @@ class Module
         $result = $res[count($res) - 1];
         if ($res[count($res) - 1] != 'success') {
             throw new Exception($data);
+        }
+    }
+
+    public static function refreshLang()
+    {
+        $langs = [];
+        $list = get_full_module_list();
+        foreach ($list as $info) {
+            if (!$info['status']) continue;
+            $lang_path = app_path() . DS . $info['name'] . DS . 'lang';
+            if (!is_dir($lang_path)) continue;
+            foreach (scandir($lang_path) as $lang) {
+                $lang_file = $lang_path . DS . $lang;
+                if (!is_file($lang_file)) continue;
+                $data = include $lang_file ?: [];
+                if (isset($langs[$lang])) $langs[$lang] = array_merge($langs[$lang], $data);
+                else $langs[$lang] = $data;
+            }
+        }
+        foreach ($langs as $lang => $data) {
+            if (!Str::endsWith($lang, '.php')) continue;
+            mkfile(base_path() . DS . 'translations' . DS . $lang, "<?php \n\nreturn " . var_export($data, true) . ';');
         }
     }
 }

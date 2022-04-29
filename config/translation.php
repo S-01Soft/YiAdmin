@@ -21,5 +21,5 @@ return [
     // Fallback language
     'fallback_locale' => ['en'],
     // Folder where language files are stored
-    'path' => '',
+    'path' => 'translations',
 ];
