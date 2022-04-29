@@ -2,8 +2,6 @@
 
 namespace app\system\model\admin;
 
-use yi\Upload;
-
 class AttachmentModel extends Model 
 {
     protected $table = "attachment";
