@@ -172,7 +172,7 @@ function logs($channel = 'default')
 
 function run_command($name, $args = '')
 {
-    $shell = "php " . base_path() . DS . "webman " . $name . ' ' . $args;
+    $shell = "php " . base_path() . DS . "cli " . $name . ' ' . $args;
     return shell_exec($shell);
 }
 

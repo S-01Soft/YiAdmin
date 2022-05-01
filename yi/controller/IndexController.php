@@ -59,9 +59,7 @@ abstract class IndexController extends BaseController
     protected function fetch(string $template = '', array $vars = [])
     {
         if (!Str::startsWith($template, '.html')) {
-            $base_path = base_path() . DS . 'view' . DS . get_current_theme() . DS;
-            if (empty($template)) $template = $base_path . snake_controller(request()->getController()) . DS . request()->getAction() . '.html';
-            else $template = $base_path . $template . '.html';
+            $template = get_template($template);
         }
         return fetch($template, $vars);
     }
