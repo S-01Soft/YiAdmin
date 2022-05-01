@@ -3,7 +3,7 @@
 基于高性能HTTP服务框架webman，内置权限管理、角色管理、用户管理、日志管理等基础功能。
 
 ## 安装
-根目录 `.env` 修改数据库连接参数，命令行执行 `php webman install`(可选参数 `-u` 用户名 `-p` 密码) 等待安装完成即可。
+根目录 `.env` 修改数据库连接参数，命令行执行 `php cli install`(可选参数 `-u` 用户名 `-p` 密码) 等待安装完成即可。
 ```
 APP_DEBUG = false
 SQL_LOG = false
