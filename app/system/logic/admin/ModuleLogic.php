@@ -161,7 +161,6 @@ class ModuleLogic extends Logic
     {
         try {
             $user = get_admin();
-            var_dump(cache('SOFT_01_TOKEN' . $user->id));
             $data = Http::get(config('app.api_url') .  static::GET_USERINFO_URL, ['token' => cache('SOFT_01_TOKEN' . $user->id), 'lang' => request()->var('locale')]);
             return $data['data'];
         } catch (Exception $e) {
