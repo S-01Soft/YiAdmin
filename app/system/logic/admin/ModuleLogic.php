@@ -122,14 +122,14 @@ class ModuleLogic extends Logic
     {
         extract($form);
         $filepath = $this->down($name, $version);
-        run_command('module', "--name $filepath --action install --force 1");
+        Module::install($filepath, true);
         @unlink($filepath);
         return $name;
     }
 
     protected function down($name, $version)
     {
-        $user = get_user();
+        $user = get_admin();
         $form = [
             'name' => $name,
             'version' => $version,
@@ -161,6 +161,7 @@ class ModuleLogic extends Logic
     {
         try {
             $user = get_admin();
+            var_dump(cache('SOFT_01_TOKEN' . $user->id));
             $data = Http::get(config('app.api_url') .  static::GET_USERINFO_URL, ['token' => cache('SOFT_01_TOKEN' . $user->id), 'lang' => request()->var('locale')]);
             return $data['data'];
         } catch (Exception $e) {

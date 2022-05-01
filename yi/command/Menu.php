@@ -147,7 +147,7 @@ class Menu extends Command
                     }
                 }
             }
-            $class_data = [];
+            // $class_data = [];
         }
     }
 

@@ -186,13 +186,14 @@ define([], function() {
                             return;
                         }
                         this.downing = true;
-                        this.progress().index("Downloading, please wait");
+                        this.progress().info("Downloading, please wait");
                         this.$http.post(get_url('remoteInstall'), {name: name, version: version}).then(function(data) {
                             self.downing = false;
-                            self.setState(data.data, 1, function() {
+                            self.setState(data, 1, function() {
                                 location.reload()
                             })
                         }).catch(function(e) {
+                            self.downing = false;
                             self.progress().error(e.message);
                         })
                     },
