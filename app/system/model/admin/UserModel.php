@@ -13,24 +13,25 @@ class UserModel extends Model
     
     protected $hidden = ['salt', 'password', 'token'];
 
-    protected $appends = ['avatar_url'];
-
-    public function getAvatarUrlAttribute($value) 
+    public function getAvatarAttribute($value) 
     {
-        return empty($value) ? fixurl('/static/images/missing-face.png') : fixurl($value);
+        return empty($value) ? '/static/images/missing-face.png' : $value;
     }
 
     public static function booted()
     {
         static::creating(function($user) {
+            $auth = User::instance();
             $user->salt = Str::random(6);
-            $user->password = User::instance()->encryptPassword($user->password, $user->salt);
+            $user->password = $auth->encryptPassword($user->password, $user->salt);
+            $user->uid = $auth->createUid();
             $user->loginip = get_ip();
         });
         static::updating(function($user) {
             if ($user->isDirty('password')) {
                 $user->password = User::instance()->encryptPassword($user->password, $user->salt);
             }
+            unset($user->uid);
         });
     }
 

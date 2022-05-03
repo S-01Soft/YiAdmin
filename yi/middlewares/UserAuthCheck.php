@@ -28,6 +28,7 @@ class UserAuthCheck implements MiddlewareInterface
             'response' => null
         ];
         event('BeforeUserAuthCheck', $payload);
+        app(\yi\Event::class)->bind('BeforeRender', 'yi\\events\\Event@onSetIndexRenderOption');
         if (is_a($payload->response, Response::class)) return $payload->response;
         if (in_array($action, $noNeedLogin) || in_array('*', $noNeedLogin)) return $next($request);
         if (in_array($action, $needLogin) || in_array('*', $needLogin)) {

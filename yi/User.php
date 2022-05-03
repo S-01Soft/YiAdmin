@@ -15,7 +15,7 @@ class User extends \yi\library\Auth
         'auth_user' => 'user', // 用户信息表
         'user' => \app\system\model\admin\UserModel::class,
         'scene' => 'user',
-        'info' => ['id', 'nickname', 'avatar', 'score', 'money', 'token'],
+        'info' => ['id', 'uid', 'nickname', 'avatar', 'score', 'money', 'token'],
         'allow_login_fail' => 20, // 最多登录失败次数
         'fail_time' => 24 * 60, // 登录失败到达次数后禁止登录时长（分钟）
         'username_fields' => 'username,email,mobile', // 可作为用户名登录的字段
@@ -76,6 +76,7 @@ class User extends \yi\library\Auth
             'nickname' => $nickname ? $nickname :  'user-' . Random::numeric(10),
             'email' => $email,
             'mobile' => $mobile,
+            // 'uid' => $this->createUid(),
             'status' => 1
         ];
         $user = $this->config['user']::create($data);
@@ -84,5 +85,14 @@ class User extends \yi\library\Auth
         ];
         event(Str::studly($this->config['scene'] . '_register_success'), $payload);
         return $payload->user;
+    }
+
+    public function createUid()
+    {
+        $uid = \yi\Random::alnum(32);
+        if ($this->config['user']::where('uid', $uid)->first()) {
+            return $this->createUid();
+        }
+        return $uid;
     }
 }

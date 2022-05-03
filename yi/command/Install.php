@@ -81,10 +81,17 @@ class Install extends Command
     protected function execSql()
     {
         $base_path = app_path() . DS . 'system' . DS . 'data' . DS;
+        $list = [];
+        $version = get_version();
         foreach (scandir($base_path) as $filename) {
             if (in_array($filename, ['.', '..'])) continue;
             $sqls = split_sql($base_path . $filename);
             foreach ($sqls as $sql) {
+                $list[] = [
+                    'app' => 'system',
+                    'name' => $filename,
+                    'version' => $version
+                ];
                 Db::select($sql);
                 list($type, $name) = $this->parseSqlInfo($sql);
                 switch($type) {
@@ -99,6 +106,7 @@ class Install extends Command
                 }
             }
         }
+        Db::table('upgrades')->insert($list);
     }
 
     protected function createAdmin($name, $password)

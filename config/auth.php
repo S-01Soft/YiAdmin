@@ -21,7 +21,7 @@ return [
         'auth_rule' => 'user_rule', // 权限规则表
         'auth_user' => 'user', // 用户信息表
         'user' => \app\system\model\admin\UserModel::class,
-        'info' => ['id', 'nickname', 'avatar', 'score', 'money', 'token'],
+        'info' => ['id', 'uid', 'nickname', 'avatar', 'score', 'money', 'token'],
         'allow_login_fail' => 5, // 最多登录失败次数
         'fail_time' => 24 * 60, // 登录失败到达次数后禁止登录时长（分钟）
         'username_fields' => 'username,email,mobile', // 可作为用户名登录的字段

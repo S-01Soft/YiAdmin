@@ -26,7 +26,6 @@ abstract class IndexController extends BaseController
         ];
         event('BeforeIndexController', $payload);
         $app = request()->app;
-        app(\yi\Event::class)->bind('BeforeRender', 'yi\\events\\Event@onSetIndexRenderOption');
         $this->user = get_user();
         $this->config('module', request()->getModule());
         $this->config('controller', str_replace('\\', '/', request()->getController()));

@@ -30,8 +30,8 @@ CHANNEL_PORT = 2206
 2. `php win.php dev` 开发调试时通过该方式启动，文件修改时自动重启
 
 `linux`: 
-1.  `php start.php -d`
-2. `php start.php`
+1.  `php start.php start -d`
+2. `php start.php start`
 
 访问后台：http://127.0.0.1:8787/system
 

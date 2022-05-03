@@ -194,8 +194,7 @@ class Module extends Command
         $info = get_module_info($name);
         $base_path = app_path() . DS . $name . DS . 'install' . DS;
         if (!is_dir($base_path)) return;
-        $history = Db::table('upgrades')->where('app', $name)->get()->toArray();
-        $history = array_column($history, 'name');
+        $history = Db::table('upgrades')->where('app', $name)->pluck('name')->toArray();
         foreach (scandir($base_path) as $name) {
             if (in_array($name, ['.', '..'])) continue;
             if (!Str::endsWith($name, '.sql')) continue;

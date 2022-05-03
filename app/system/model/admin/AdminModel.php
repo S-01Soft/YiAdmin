@@ -13,9 +13,9 @@ class AdminModel extends Model
 
     protected $dates = [''];
     
-    public function getAvatarAttribute($value) 
+    public function getAvatarAttribute($value)
     {
-        return empty($value) ? fixurl('/static/images/missing-face.png') : fixurl($value);
+        return empty($value) ? '/static/images/missing-face.png' : $value;
     }
 
     public static function booted()
