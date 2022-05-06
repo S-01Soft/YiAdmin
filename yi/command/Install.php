@@ -90,7 +90,8 @@ class Install extends Command
                 $list[] = [
                     'app' => 'system',
                     'name' => $filename,
-                    'version' => $version
+                    'version' => $version,
+                    'created_at' => time()
                 ];
                 Db::select($sql);
                 list($type, $name) = $this->parseSqlInfo($sql);
