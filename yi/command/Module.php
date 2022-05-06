@@ -195,10 +195,10 @@ class Module extends Command
         $base_path = app_path() . DS . $name . DS . 'install' . DS;
         if (!is_dir($base_path)) return;
         $history = Db::table('upgrades')->where('app', $name)->pluck('name')->toArray();
-        foreach (scandir($base_path) as $name) {
-            if (in_array($name, ['.', '..'])) continue;
-            if (!Str::endsWith($name, '.sql')) continue;
-            $list[] = substr($name, 0, strlen($name) - 4);
+        foreach (scandir($base_path) as $fname) {
+            if (in_array($fname, ['.', '..'])) continue;
+            if (!Str::endsWith($fname, '.sql')) continue;
+            $list[] = substr($fname, 0, strlen($fname) - 4);
         }
         $list = version_sort($list);
         foreach ($list as $fname) {
