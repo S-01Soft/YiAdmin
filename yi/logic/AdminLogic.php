@@ -81,13 +81,14 @@ class AdminLogic extends BaseLogic
     public function select()
     {
         $page_size = (int)request()->input('page_size', 10);
+        $page = (int)request()->input('page', 1);
         $query = $this->getDefaultQuery();
         $payload = (object) [
             'query' => $query
         ];
         $this->beforeSelect($payload->query);
         $this->event('BeforeSelect', $payload);
-        $result = $payload->query->paginate($page_size);
+        $result = $payload->query->paginate($page_size, '*', 'page', $page);
         $payload->result = $result;
         $this->event('AfterSelect', $payload);
         return $this->afterSelect($payload->result);

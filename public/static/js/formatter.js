@@ -51,7 +51,7 @@ define(function () {
                 css += '.web-uploader-item:not(first){margin-left: 4px;}';
                 css += '.web-uploader-img img {width:100%;max-height: 100%;}';
                 css += '.web-uploader-btn-del{margin-top:2px;height:20px;line-height: 20px;border-radius: 4px;background-color: rgb(223, 70, 70);color: rgb(255, 255, 255);font-size: 13px;}'
-                css += '.btn-upload .webuploader-pick {display: inline-block;font-weight: 400;color: #212529;text-align: center;vertical-align: middle;-webkit-user-select: none;';
+                css += '.btn-upload .webuploader-pick {display: inline-block;font-weight: 400;color: #212529;text-align: center;vertical-align: middle;-webkit-user-select: none;padding: .375rem .75rem;';
                 css += '-moz-user-select: none;-ms-user-select: none;user-select: none;border: 1px solid transparent;font-size: 1rem;border-radius: .25rem;transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;';
                 css += 'background-color:#dc3545;border-color: #dc3545;color: #fff;padding-left:2em;padding-right:2em;border-radius: 100px;border-top-left-radius: 0;border-bottom-left-radius: 0;}';
                 $(document.head).append($('<style>' + css + '</style>'))

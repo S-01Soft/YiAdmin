@@ -95,6 +95,7 @@ window.Mixins = {
         methods: {
             handleGetWhere: function(where) {
                 this.query.where = where;
+                this.query.page = 1;
             },
             handleExports: function(setting) {
                 var query = __.clone(this.query);

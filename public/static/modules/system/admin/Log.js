@@ -2,7 +2,6 @@ define([], function() {
     var Action = {        
         index: function() {
             Yi.vue.mixin(Mixins.table);
-            Yi.vue.mixin(Mixins.table);
             var self;
             var columns = [
                 { title: 'ID', dataIndex: 'id', key: 'id', customRender: Yi.render.html, }, 

@@ -96,7 +96,7 @@
                     </a-radio-group>
                     <a-switch v-if="item.search.type == 'switch'" v-model="item.search.value" @change="handleWhereChange(item)" v-bind="{...item.search.props, ...item.search.attrs}" v-on="item.search.events"></a-switch>
                     <yi-checkbox v-if="item.search.type == 'checkbox'" v-model="item.search.value" :options="item.search.options" @change="handleWhereChange(item)" v-bind="{...item.search.props, ...item.search.attrs}" v-on="item.search.events"></yi-checkbox>
-                    <yi-inputs v-if="item.search.type == 'inputs'" v-model="item.search.value" @change="handleWhereChange(item)" @enter.13="handleSubmit" v-bind="{...item.search.props, ...item.search.attrs}" v-on="item.search.events"></yi-inputs>
+                    <yi-inputs v-if="item.search.type == 'inputs'" v-model="item.search.value" @change="handleWhereChange(item)" @keyup.13.native="handleSubmit" v-bind="{...item.search.props, ...item.search.attrs}" v-on="item.search.events"></yi-inputs>
                     <component v-if="item.search.type == 'custom'" :is="item.search.component" v-bind="{...item.search.attrs, ...item.search.props}" v-on="item.search.events" v-model="item.search.value"></component>
                 </a-form-item>
             </div>
