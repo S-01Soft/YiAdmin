@@ -77,7 +77,7 @@ class Menu extends Command
         try {
             $this->save($data);
         } catch (\PDOException $e) {
-            $output->wirteln($e->getMessage());
+            $output->writeln($e->getMessage());
         } catch (\Throwable $e) {
             $output->writeln($e->getMessage());
         }
@@ -116,7 +116,6 @@ class Menu extends Command
                     'status' => 1
                 ];
                 if (isset($menu['off'])) {
-                    $class_data = [];
                     continue;
                 }
                 $data[] = $class_data;

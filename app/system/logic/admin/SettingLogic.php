@@ -60,7 +60,7 @@ class SettingLogic extends Logic
                 'data' => $content
             ]);
         } else {
-            $data->save(['data' => $content]);
+            $data->update(['data' => $content]);
         }
     }
 }

@@ -41,7 +41,7 @@ class UserAuthCheck implements MiddlewareInterface
         if (!in_array($action, $noNeedCheck) || in_array('*', $noNeedCheck)) {
             $rule = '/' . $request->getModule() . '/' . snake_controller($request->getController()) . '/' . $request->getAction();
             $rule = str_replace('\\', '/', $rule);
-            if ($user->id !== 1 && !$user->check($rule, $user->id, '', 1)) return error('您没有该操作权限', 401, '', null, $class->error_tmpl);
+            if ($user->id !== 1 && !$user->check($rule, $user->id, 1, 'url')) return error('您没有该操作权限', 401, '', null, $class->error_tmpl);
         }
         return $next($request);
     }

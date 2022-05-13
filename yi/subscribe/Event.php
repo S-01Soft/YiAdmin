@@ -8,6 +8,17 @@ class Event
 {
     protected $classMaps = [];
 
+    public function onHttpRun()
+    {
+        \Illuminate\Pagination\Paginator::currentPageResolver(function ($pageName = 'page') {
+            $page = request()->input($pageName);
+            if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int) $page >= 1) {
+                return (int) $page;
+            }
+            return 1;
+        });
+    }
+
     public function onBindEvent($payload)
     {
         if (is_installed()) {

@@ -408,7 +408,7 @@ class AdminLogic extends BaseLogic
         $query = $this->static::whereRaw("1=1");
         $this->parseWhere($query, $this->where_ignore);
         if (!empty($param['order'])) $query->orderByRaw($param['order']);
-        if (!empty($param[$this->model->getKeyName()])) $query->where([$this->model->getKeyName(), '=', $param[$this->model->getKeyName()]]);
+        if (!empty($param[$this->model->getKeyName()])) $query->where($this->model->getKeyName(), $param[$this->model->getKeyName()]);
         return $query;
     }
 

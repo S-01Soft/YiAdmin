@@ -6,4 +6,5 @@ class SettingModel extends Model
 {
     protected $table = "setting";
 
+    public $timestamps = false;
 }

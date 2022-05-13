@@ -98,7 +98,7 @@ export default {
             default: "page",
         },
         pagesizeField: {
-            default: "pagesize",
+            default: "page_size",
         },
         page: {
             default: 1,

@@ -38,7 +38,7 @@ class ApiAuthCheck implements MiddlewareInterface
         if (!in_array($action, $noNeedCheck) || in_array('*', $noNeedCheck)) {
             $rule = '/' . $request->getModule() . '/' . snake_controller($request->getController()) . '/' . $request->getAction();
             $rule = str_replace('\\', '/', $rule);
-            if ($user->id !== 1 && !$user->check($rule, $user->id, '', 1)) return error('您没有该操作权限', 401, [], 'json');
+            if ($user->id !== 1 && !$user->check($rule, $user->id, 1, 'url')) return error('您没有该操作权限', 401, [], 'json');
         }
         return $next($request);
     }

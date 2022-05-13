@@ -43,7 +43,7 @@ class AdminAuthCheck implements MiddlewareInterface
         if (!in_array($action, $noNeedCheck) || in_array('*', $noNeedCheck)) {
             $rule = '/' . $request->getModule() . '/' . snake_controller($request->getController()) . '/' . $request->getAction();
             $rule = str_replace('\\', '/', $rule);
-            if ($admin->id !== 1 && !$admin->check($rule, $admin->id)) {
+            if ($admin->id !== 1 && !$admin->check($rule, $admin->id, 1, 'url')) {
                 return error('您没有该操作权限 [' . $rule . ']', 401, '', null, $class->error_tmpl);
             }
         }

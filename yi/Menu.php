@@ -31,7 +31,7 @@ class MenuInstance
 
     public function install($module, $scene = 'admin', $dir = 'admin')
     {
-        return run_command('menu', "--name=$module --scene=$scene --dir=$dir");
+        return run_command('menu', "--name $module --scene $scene --dir $dir");
     }
 
     public function uninstall($module, $scene = 'admin')

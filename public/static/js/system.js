@@ -19,7 +19,7 @@ require.config({
         formatter: 'js/formatter.js?v=' + Config.version + '&r=' + get_static_version(),
         YiComponents: 'vendor/yi-components/dist/yi-components.js?v=' + Config.version + '&r=' + get_static_version(),
         lang: '../_lang?callback=define&m=' + Config.module + '&c=' + Config.controller + '&r=' + Config.langVersion,
-        action: path + '.js?v=' + Config.version + '&r=' + get_static_version()
+        action: path + '.js?v=' + (Config.module == 'system' ? Config.version : Config.moduleVersion) + '&r=' + get_static_version()
     },
     packages: [
         {

@@ -12,7 +12,7 @@
                         style="display: inline-block"
                         class="pointer"
                     >
-                        <img style="width: 100%" :src="v" />
+                        <img style="width: 100%;" :src="v" />
                     </div>
                     <div
                         :title="$lang('Remove')"
@@ -74,7 +74,7 @@
                     :key="index"
                 >
                     <div class="img" style="height: 120px">
-                        <img style="width: 100%" :src="imageShow(item)" alt="" />
+                        <img :src="imageShow(item)" alt="" />
                     </div>
                     <div
                         @click="handleDelete(item, index)"
@@ -192,7 +192,8 @@ export default {
 </script>
 <style scoped>
 .yi-attachment .yi-upload-image-list .yi-upload-image-item {
-    display: inline-block;
+    display: table-cell;
+    text-align: center;
     width: 120px;
     height: 150px;
     padding: 2px;
@@ -203,7 +204,9 @@ export default {
 }
 
 .yi-attachment .img {
-    display: table-cell;
-    vertical-align: middle;
+    height: 120px;
+}
+.yi-attachment .img img {
+    max-height: 120px;
 }
 </style>

@@ -71,7 +71,6 @@
         var globalComponents = [];
         var Config = <?=json_encode($config)?>;
         var path = '/static/modules/' + Config.module + '/' + Config.controller;
-        if (Config.module != 'system') path += '.js?r=' + Config.moduleVersion;
         var action = Config.action;
         var EventPrefix = '{:request()->getName()}';
         var base_url = '/{$config.module}/{:snake_controller($config.controller)}/';
