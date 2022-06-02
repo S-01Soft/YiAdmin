@@ -11,7 +11,7 @@ class Event
     public function onHttpRun()
     {
         \Illuminate\Pagination\Paginator::currentPageResolver(function ($pageName = 'page') {
-            $page = request()->input($pageName);
+            $page = (int)request()->input($pageName);
             if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int) $page >= 1) {
                 return (int) $page;
             }
