@@ -4,7 +4,9 @@ use Webman\Console\Command;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/support/bootstrap.php';
-
+if ($timezone = config('app.default_timezone')) {
+    date_default_timezone_set($timezone);
+}
 $cli = new Command();
 $cli->setName('webman cli');
 $cli->installInternalCommands();

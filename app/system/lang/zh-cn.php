@@ -120,6 +120,7 @@ return [
     'Upload Module' => '上传模块',
     'Refresh Module' => '模块刷新',
     'Restart System' => '重启系统',
+    'System upgrading' => '系统更新中……',
     'System restarting' => '系统重启中……',
     'System started' => '系统已启动',
     'Previous' => '上一页',
@@ -127,16 +128,20 @@ return [
     'Recycle' => '回收站',
     'Restore' => '还原',
     'Destroy' => '摧毁',
-    
+    'App Upgrade' => '应用更新',
+    'View Upgrade Files' => '查看升级文件',
+    'Upgrade to this version' => '升级到此版本',
+    'View Difference' => '对比差异',
+    'Please make a backup before upgrading' => '升级前请做好备份，确定升级吗？',
     'Unable to open compressed package' => '无法打开压缩包',
     'The file "info" parsing error' => "info文件解析错误",
     'The addon is exsist' => '插件已存在',
     'Please disable the plugin first' => '请先禁用插件！',
     'Remote server error, please try again' => '远程服务器错误，请重试',
-
     
     'File type is not supported' => '不支持的文件格式',
     'File size out of limit' => '文件大小超出限制',
+    'File Not Exsists' => '文件不存在',
 
     ':attribute require'                                        => ':attribute不能为空',
     ':attribute must'                                           => ':attribute必须',

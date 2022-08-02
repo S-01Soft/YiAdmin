@@ -23,7 +23,7 @@ class Paginator
         $page = $page ?: request()->get('page', 1);
         $param = request()->get();
         $param['page'] = '__PAGE_NUM__REPLACE__';
-        $url = ($link ?: request()->url()) . '?' . http_build_query($param) ;
+        $url = ($link ?: request()->url()) . '?' . http_build_query($param);
         $url = str_replace('__PAGE_NUM__REPLACE__', '(:num)', $url);
         return (new Pagination($total, $perPage, $page, $url))->setPreviousText(lang('Previous'))->setNextText(lang('Next'));
     }

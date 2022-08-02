@@ -94,6 +94,7 @@
                                         </a-menu>
                                     </a-dropdown>
                                     <a href="/system/admin/module/option?name=system" class="open-dialog" style="color: #ffffffa6;margin: 0 4px;" title="{:lang('System Config')}"><i class="fas fa-cogs"></i></a>
+                                    <a @click="Yi.open({title: $lang('App Upgrade'), content: '/system/admin/index/upgrade', area: ['450px', '95%']})" title="{:lang('App Upgrade')}" style="color:#ffffffa6;margin: 0 4px;"><i class="fas fa-cloud-upload-alt"></i></a>
                                     <a-dropdown>
                                         <a @click="function(e) {e.preventDefault()}">{$admin->nickname} <a-icon type="down"></a-icon></a>
                                         <a-menu style="margin-top: 10px;" slot="overlay">
@@ -123,9 +124,9 @@
             {:widget('main-content')}
         </div>
     </template>
-    <script src="/static/js/common.js?v={$config.statics.version|default=time()}"></script>
-    <script type="text/javascript" src="/static/js/yi.js?v={$config.statics.version|default=time()}"></script>
-    <script src='{$config.statics.open && !empty($config.statics.maps.require) ? $config.statics.maps.require : "/static/library/requirejs/require.js"}' data-main="/static/js/system.js?v={$config.statics.version|default=time()}"></script>
+    <script src="/static/js/common.js?v={$config.statics.version|default='1.0.0'}"></script>
+    <script type="text/javascript" src="/static/js/yi.js?v={$config.statics.version|default='1.0.0'}"></script>
+    <script src='{$config.statics.open && !empty($config.statics.maps.require) ? $config.statics.maps.require : "/static/library/requirejs/require.js"}' data-main="/static/js/system.js?v={$config.statics.version|default='1.0.0'}"></script>
     {:widget('component')}
     {:widget('main-scripts')}
 </body>

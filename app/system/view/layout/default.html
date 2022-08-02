@@ -13,11 +13,11 @@
 
     <link rel="stylesheet" href="{$config.statics.maps.fontawesome|default='/static/library/font-awesome/css/all.min.css'}">
 
-    <link rel="stylesheet" href="/static/css/layui-theme.css?v={$config.statics.version|default=time()}">
+    <link rel="stylesheet" href="/static/css/layui-theme.css?v={$config.statics.version|default='1.0.0'}">
 
     <link rel="stylesheet" href="{$config.statics.maps.antdcss|default='/static/ant/antd.min.css'}">
 
-    <link rel="stylesheet" href="/static/css/common.css?v={$config.statics.version|default=time()}">
+    <link rel="stylesheet" href="/static/css/common.css?v={$config.statics.version|default='1.0.0'}">
 
     <style>
         
@@ -90,12 +90,12 @@
         </h1>
     </div>
     {block name="content"}{/block}
-    <script src="/static/js/common.js?v={$config.statics.version|default=time()}"></script>
-    <script type="text/javascript" src="/static/js/yi.js?v={$config.statics.version|default=time()}"></script>
+    <script src="/static/js/common.js?v={$config.statics.version|default='1.0.0'}"></script>
+    <script type="text/javascript" src="/static/js/yi.js?v={$config.statics.version|default='1.0.0'}"></script>
     {:widget('component')}
     {block name="scripts"}{/block}
     {:widget('before-main-scripts')}
-    <script src="{$config.statics.open && $config.statics.maps.require ? $config.statics.maps.require : '/static/library/requirejs/require.js'}" data-main="/static/js/system.js?v={$config.statics.version|default=time()}"></script>
+    <script src="{$config.statics.open && $config.statics.maps.require ? $config.statics.maps.require : '/static/library/requirejs/require.js'}" data-main="/static/js/system.js?v={$config.statics.version|default='1.0.0'}"></script>
     {:widget('after-main-scripts')}
 </body>
 </html>

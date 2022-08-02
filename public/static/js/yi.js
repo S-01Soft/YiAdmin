@@ -425,7 +425,7 @@ var Yi = {
     },
     render: {
         val: function (value, row, index, column) {
-            return Yi.getByDotKey(row, column.key);
+            return value === undefined ? Yi.getByDotKey(row, column.key) : value;
         },
         html: function (value, row, index, column, el) {
             var h = $vm.$createElement;
@@ -465,10 +465,10 @@ var Yi = {
             var children = [];
             for (var i = 0; i < val_arr.length; i++) {
                 val = val_arr[i];
-                children.push(Yi.render.image(value, row, index, column));
+                children.push(Yi.render.image(val, row, index, column));
             }
             var h = $vm.$createElement;
-            return h('div', children);
+            return h('div', {}, children);
         },
         switch: function (value, row, index, column) {
             value = Yi.render.val(value, row, index, column);

@@ -1,5 +1,4 @@
 require.config({
-    urlArgs: 'v=' + (Config.statics && Config.statics.open && Config.statics.version || (Config.debug ? Date.now() : '1.0.0')), 
     baseUrl: '/static/',
     paths: {
         'jquery': Yi.getStatic('jquery') || 'library/jquery/dist/jquery.min',

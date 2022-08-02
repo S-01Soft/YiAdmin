@@ -1,0 +1,94 @@
+{extend name="admin/public/layout" /}
+{block name="style"}
+<style>
+    p {
+        margin-bottom: 5px;
+    }
+    .ant-modal-header {
+        background: #152a3d;
+    }
+    .ant-modal-title, .ant-modal-close {
+        color: #fff;
+    }
+    .ant-modal-close:hover {
+        color: #bbb;
+    }
+</style>
+{:widget('style')}
+{/block}
+{block name="content"}
+<template id="app">
+    <div>
+        {:widget('dashbord_before_content')}
+        <ul>
+            <li v-for="(item,i) in logs" :key="i" style="padding: 5px 0;border-bottom: 1px solid #ddd;">
+                <div style="font-size: 16px;font-weight: 700;color:#3c9ed8">{{item.version}}</div>
+                <div v-html="item.content"></div>
+                <div class="text-center">
+                    <app-upgrade :version="item.version" :file="item.package" @submit="submit"></app-upgrade>
+                </div>
+            </li>
+        </ul>
+        <div v-if="!loading && logs.length == 0" class="text-center" style="font-size: 18px;padding-top: 85px;color: red;">
+            恭喜，当前是最新版本！
+        </div>
+        {:widget('dashbord_after_content')}
+
+    </div>
+</template>
+{/block}
+{block name="scripts"}
+{:widget('scripts')}
+<template id="app-upgrade">
+    <div>
+        <div><a-button type="danger" :loading="loading" ghost @click="handleClick">{:lang('View Upgrade Files')}</a-button> <a-button type="primary" :loading="loading" @click="submit">{:lang('Upgrade to this version')}</a-button></div>
+        <a-modal v-model="show" :title="$lang('View Upgrade Files') + ' 【' + version + '】'" ok-text="{:lang('Upgrade to this version')}" @ok="submit">
+            <div style="max-height: 280px;overflow-y: scroll;">
+                <ul>
+                    <li v-for="(item,i) in list" :key="i" style="padding: 5px 0;">
+                        <div><span>{{item.new_file}}</span><a v-if="item.old_file" style="margin-left: 10px;" :href="'/system/admin/index/diff?version=' + version + '&file=' + item.new_file" target="_blank">{:lang('View Difference')}</a><span v-else style="margin-left: 10px;color: red;">{:lang('Add')}</span></div>
+                    </li>
+                </ul>
+            </div>
+        </a-modal>
+    </div>
+</template>
+<script>
+    Yi.ready(function() {
+        Vue.component('app-upgrade', {
+            template: '#app-upgrade',
+            data: function() {
+                return {
+                    loading: false,
+                    show: false,
+                    list: []
+                }
+            },
+            props: {
+                version: '',
+                file: ''
+            },
+            mounted: function() {
+                this.init()
+            },
+            methods: {
+                init: function() {
+                    var _this = this;
+                    this.loading = true;
+                    this.$http.post('/system/admin/index/get_upgrade_files', {version: this.version, file: this.file}).then(function(data) {
+                        _this.loading = false;
+                        _this.list = data;
+                    });
+                },
+                handleClick: function() {
+                    if (this.loading) return;
+                    this.show = true;
+                },
+                submit: function() {
+                    this.$emit('submit', this.version);
+                }
+            }
+        });
+    })
+</script>
+{/block}

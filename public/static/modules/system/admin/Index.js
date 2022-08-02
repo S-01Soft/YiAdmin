@@ -445,6 +445,75 @@ define([], function () {
                 }
             };
             return config;
+        },
+        upgrade: function() {
+            var self;
+            var config = {
+                template: '#app',
+                data: function() {
+                    return {
+                        loading: false,
+                        logs: []
+                    }
+                },
+                mounted: function() {
+                    self = this;
+                    this.init();
+                },
+                methods: {
+                    init: function() {
+                        this.loading = true;
+                        this.$http.get('').then(function(data) {
+                            self.loading = false;
+                            self.logs = data;
+                        });
+                    },
+                    submit: function(version) {
+                        this.$confirm({
+                            title: $lang('Tips'),
+                            content: $lang('Please make a backup before upgrading'),
+                            onOk: function() {
+                                var lock = false;
+                                var data = [];
+                                for (var i = 0; i < self.logs.length; i ++) {
+                                    var item = self.logs[i];
+                                    if (item.version == version) lock = true;
+                                    if (lock) data.push(item.version)
+                                }
+                                self.$message.info($lang('System upgrading'))
+                                self.$http.post('/system/admin/index/upgrade', {versions: data}).then(function(data) {
+                                    self.system_reload();
+                                });
+                            }
+                        })
+                    },
+                    system_reload: function() {
+                        this.$message.info($lang('System restarting'))
+                        this.$http.post('/system/admin/index/restart').then(function() {
+                            self.$message.info($lang('System started'));
+                            location.reload();
+                        })
+                    },
+                }
+            };
+            return config
+        },
+        diff: function() {
+            var self;
+            var config = {
+                template: '#app',
+                data: function() {
+                    return {
+                        logs: []
+                    }
+                },
+                mounted: function() {
+                    self = this;
+                },
+                methods: {
+                }
+            };
+            return config
         }
     };
     return Action;

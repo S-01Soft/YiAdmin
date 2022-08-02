@@ -101,7 +101,37 @@ class IndexLogic extends Logic
         $indexIpTop10Query->selectRaw('count(*) as total,ip')->groupBy('ip')->orderByRaw('total DESC')->limit(10);
         $list = $indexIpTop10Query->get()->toArray();
         $data['indexIpTop10'] = $list;
+        return $data;
+    }
 
+    public function get_upgrade_files($version, $file)
+    {
+        $dir = RUNTIME_PATH . DS . 'system' . DS . 'upgrade-files' . DS . $version;
+        if (is_dir($dir)) return $this->getFiles($dir);
+        if (empty($file)) return [];
+        $response = \yi\Http::get($file, [], [], '');
+        $tmp = $dir . '.zip';
+        mkfile($tmp, $response);
+        $zip = new \ZipArchive;
+        $zip->open($tmp);
+        $zip->extractTo($dir);
+        $zip->close();
+        unlink($tmp);
+        return $this->getFiles($dir);
+    }
+
+    public function getFiles($dir)
+    {
+        $data = [];
+        scan_dir($dir, function($it, $file) use (&$data, $dir) {
+            if ($it->isDir()) return;
+            $filename = $file->getRealPath();
+            $relative_path = str_replace(DS, '/', substr($filename, strlen($dir)));
+            $data[] = [
+                'new_file' => $relative_path,
+                'old_file' => file_exists(BASE_PATH . DS . $relative_path)
+            ];
+        });
         return $data;
     }
 }

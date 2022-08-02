@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件差异对比</title>
+    <link rel="stylesheet" href="/static/vendor/mergely/css/codemirror.css">
+    <link rel="stylesheet" href="/static/vendor/mergely/css/mergely.css">
+    <style>
+        .mergely-full-screen {
+            position: absolute; top: 40px; bottom: 0; left: 0; right: 0; overflow: hidden;
+        }
+        .col-6 {
+            width: 50%;
+            float: left;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-md {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="row">
+            <div class="col-6 text-center text-sm">原文件</div>
+            <div class="col-6 text-center text-sm">新文件</div>
+        </div>
+        <div class="mergely-full-screen">
+            <div class="mergely-resizer">
+                <div id="mergely-content"></div>
+            </div>
+        </div>
+    </div>
+    <textarea id="old_file" style="display: none;">{$old_file}</textarea>
+    <textarea id="new_file" style="display: none;">{$new_file}</textarea>
+    <script src="{:get_static('jquery', '/static/library/jquery/dist/jquery.min')}.js"></script>
+    <script src="{:get_static('codemirror', '/static/vendor/mergely/js/codemirror.min')}.js"></script>
+    <script src="{:get_static('mergely', '/static/vendor/mergely/js/mergely')}.js"></script>
+    <script type="text/javascript">
+		$(document).ready(function () {
+			$('#mergely-content').mergely({
+				license: 'commercial',
+				cmsettings: {
+					readOnly: true
+				},
+				lhs: function(setValue) {
+					setValue($("#old_file").val());
+				},
+				rhs: function(setValue) {
+					setValue($("#new_file").val());
+				}
+			});
+		});
+	</script>
+</body>
+</html>

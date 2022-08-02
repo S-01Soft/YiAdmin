@@ -273,7 +273,7 @@ function get_template()
     $args = func_get_args();
     if (count($args) == 1) {
         $template = $args[0];
-        if (Str::endsWith($template, '.html')) return $template;
+        if (Str::endsWith($template, '.html')) return BASE_PATH . DS .$template;
         $default = view_path() . DS . 'default' . DS . str_replace('/', DS, $template ) . '.html';
         $tpl = view_path() . DS . get_current_theme() . DS . $template . '.html';
         if (!file_exists($tpl)) $tpl = $default;
@@ -411,7 +411,10 @@ function scan_dir($dir, $cb, $self_first = true)
         $self_first ? RecursiveIteratorIterator::SELF_FIRST : RecursiveIteratorIterator::CHILD_FIRST
     );
     foreach ($iterator as $it) {
-        $cb && $cb($it, $iterator);
+        if ($cb) {
+            $result = $cb($it, $iterator);
+            if ($result === false) return;
+        }
     }
 }
 function array_merge_deep(...$arrs)
@@ -582,8 +585,10 @@ function filter($value, $callbacks = [])
 function fixurl($url)
 {
     if (preg_match("/^http[s]{0,1}:\/\//i", $url) || preg_match("/^\/\//i", $url)) return $url;
-    $proto = request()->header('X-Forwarded-Proto');
-    return ($proto ? $proto . ':' : '') . '//' . request()->host() . (Str::startsWith($url, '/') ? '' : '/') . $url;
+    $default_proto = get_module_group_config('system', 'base', 'proto');
+    $proto = request() ? (request()->header('X-Forwarded-Proto') ?: $default_proto) : $default_proto;
+    $host = request() ? request()->host() : get_module_group_config('system', 'base', 'host');
+    return ($proto ? $proto . ':' : '') . '//' . $host . (Str::startsWith($url, '/') ? '' : '/') . $url;
 }
 
 function view_path()

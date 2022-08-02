@@ -13,7 +13,7 @@ abstract class BaseController
     public $needLogin = [];
     public $needCheck = [];
 
-    public $config_key = '__CONTROLLER_ASSIGN_CONFIG_';
+    public $config_key = '__CONTROLLER_ASSIGN_CONFIG__';
 
     protected $_config = [];
 

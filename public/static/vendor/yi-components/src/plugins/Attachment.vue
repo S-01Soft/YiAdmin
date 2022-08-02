@@ -12,7 +12,7 @@
                         style="display: inline-block"
                         class="pointer"
                     >
-                        <img style="width: 100%;" :src="v" />
+                        <img style="width: 100%;" :src="thumbImage ? thumbImage : v" />
                     </div>
                     <div
                         :title="$lang('Remove')"
@@ -109,6 +109,9 @@ export default {
         },
         type: {
             default: "default",
+        },
+        thumbImage: {
+            default: ''
         },
         multiple: {
             default: false,

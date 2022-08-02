@@ -365,13 +365,12 @@ class AdminLogic extends BaseLogic
         return $result;
     }
 
-    public function import($file)
+    public function import()
     {
+        $file = \yi\Storage::config(['driver' => 'local', 'record' => false, 'type' => 'private'])->upload(request()->file('file'));
+        if ($file == 'continue') return $file;
         $reader = IOFactory::createReader('Xlsx');
-        $file_sha1 = hash_file('sha1', $file->getPathname());
-        $filename = runtime_path() . DS . 'temp' . DS . date('Ym') . DS . $file_sha1 . '.' . $file->getUploadExtension();
-        $file->move($filename);
-        $excel = $reader->load($filename);
+        $excel = $reader->load($file);
         $sheet = $excel->getSheet(0);
         $maxRow = $sheet->getHighestRow();
         $maxCol = $sheet->getHighestDataColumn();

@@ -113,7 +113,7 @@
                     <a-radio-group button-style="solid" v-model="currentTop10Type" :options="top10Options"></a-radio-group>
                     <ul v-if="currentTop10Type == 'indexIpTop10'">                    
                         <li v-for="(item,index) in data[currentTop10Type]" :key="index">
-                            <span :class="top10Query.page == 1 && index < 3 ? 'top-3' : ''" class="sort">{{index + 1}}</span> <span>{{item.ip}}</span>
+                            <span :class="top10Query.page == 1 && index < 3 ? 'top-3' : ''" class="sort">{{index + 1}}</span> <span>{{item.ip}} [{{item.ip_txt}}]</span>
                             <span class="total">{{item.total}}</span>
                         </li>
                     </ul>
@@ -139,7 +139,7 @@
                     <p><span>{:lang("Upload Size")}：</span> <span>{$data.upload_size}</span> </p>
                     <p><span>{:lang("Memory Used")}：</span> <span>{$data.memory|raw}</span> </p>
                     <p><span>{:lang("System Version")}：</span><span>{:get_version()}</span>
-                    <a href="https://www.01soft.top" target="_blank">{:lang("Check for updates")}</a></p>
+                    <a @click="Yi.open({title: $lang('App Upgrade'), content: '/system/admin/index/upgrade', area: ['450px', '95%']})" title="{:lang('App Upgrade')}">{:lang("Check for updates")}</a></p>
                 </a-card>
             </a-col>
             {:widget('dashbord_after_card_item')}

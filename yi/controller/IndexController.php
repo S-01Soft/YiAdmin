@@ -57,9 +57,11 @@ abstract class IndexController extends BaseController
     
     protected function fetch(string $template = '', array $vars = [])
     {
-        if (!Str::startsWith($template, '.html')) {
-            $template = get_template($template);
-        }
-        return fetch($template, $vars);
+        $template = get_template($template);
+        $payload = (object) [
+            'template' => $template
+        ];
+        event('FetchIndexView', $payload);
+        return fetch($payload->template, $vars);
     }
 }

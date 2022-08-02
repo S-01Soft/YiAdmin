@@ -1,4 +1,31 @@
 {
+    "base_proto": {
+        "group": "Base",
+        "group_key": "base",
+        "name": "base_proto",
+        "alias": "proto",
+        "title": "Http协议",
+        "type": "radio",
+        "options": {
+            "http": "http",
+            "https": "https"
+        },
+        "value": "http",
+        "placeholder": "",
+        "tip": ""
+    },
+    "base_host": {
+        "group": "Base",
+        "group_key": "base",
+        "name": "base_host",
+        "alias": "host",
+        "title": "域名",
+        "type": "string",
+        "options": [],
+        "value": "",
+        "placeholder": "",
+        "tip": "如：www.yousite.com"
+    },
     "theme": {
         "group": "Base",
         "group_key": "base",

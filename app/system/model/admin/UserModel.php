@@ -50,8 +50,7 @@ class UserModel extends Model
             'score' => $score,
             'before' => $user->score,
             'after' => $user->score + $score,
-            'memo' => $memo,
-            'created_at' => time()
+            'memo' => $memo
         ];
         $user->score = $user->score + $score;
         $user->save();

@@ -71,11 +71,12 @@ class AttachmentLogic extends Logic
     {
         $config = get_module_group_config('system', 'upload');
         $option = [
-            'type' => 'public',
+            'type' => $form['type'] ?? 'public',
             'scene' => empty($form['scene']) ? '系统' : $form['scene'],
             'group' => empty($form['group']) ? '默认' : $form['group'],
             'accept' => $config['accept'],
-            'maxsize' => $config['maxsize']
+            'maxsize' => $config['maxsize'],
+            'record' => $form['record'] ?? true
         ];
         return Storage::config($option)->upload($file);
     }

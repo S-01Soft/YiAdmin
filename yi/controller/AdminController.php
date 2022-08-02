@@ -266,9 +266,8 @@ abstract class AdminController extends BaseController
     public function imports()
     {
         try {
-            $file = $this->request->file('file');
-            $this->logic->import($file);
-            return $this->success();
+            $data = $this->logic->import();
+            return $this->success($data);
         } catch(Exception $e) {
             return $this->error($e->getMessage(), $e->getCode());
         }

@@ -212,4 +212,74 @@ class Index extends Base
             $response->cookie('lang', $lang, 0, '/');
         });
     }
+
+    /**
+     * @Menu(title=App Upgrade)
+     */
+    public function upgrade()
+    {
+        if ($this->request->isAjax()) {
+            if ($this->request->isGet()) {
+                $version = get_version();
+                $data = \yi\Http::get(config('app.api_url') . '/version/api/index/log', ['version' => $version,'token' => cache('SOFT_01_TOKEN' . get_admin()->id)]);
+                if (!isset($data['code'])) return $this->error($data);
+                if ($data['code'] == 1) return $this->success($data['data']);
+                else return $this->error($data['message']);
+            } else {
+                $versions = $this->request->post('versions');
+                $versions = version_sort($versions, 'asc');
+                $system_full_config = get_module_full_config('system');
+                foreach ($versions as $v) {
+                    $dir = RUNTIME_PATH . 'system' . DS . 'upgrade-files' . DS . $v;
+                    if (is_dir($dir)) {
+                        copy_files($dir, BASE_PATH);
+                        rmdirs($dir, true);
+                    }
+                }
+                $new_system_full_config = (array)json_decode(file_get_contents(APP_PATH . DS . 'system' . DS . 'config.json'), true);
+                $config = [];
+                foreach ($system_full_config as $key => $item) {
+                    if (isset($new_system_full_config[$key])) $item['value'] = $new_system_full_config[$key]['value'];
+                    $config[$key] = $item;
+                }
+                foreach ($new_system_full_config as $key => $item) {
+                    if (!isset($config[$key])) $config[$key] = $item;
+                }
+                set_module_full_config('system', $config);
+                \yi\module::refreshLang();
+                event('RefreshLangVersion');
+                return $this->success($versions);
+            }
+        }
+        return $this->fetch();
+    }
+
+    /**
+     * @Menu(title=Get System UpgradeFiles)
+     */
+    public function get_upgrade_files() 
+    {
+        $version = request()->post('version');
+        $file = request()->post('file');
+        $data = $this->logic->get_upgrade_files($version, $file);
+        return $this->success($data);
+    }
+
+    /**
+     * @Menu(title=Files Diff)
+     */
+    public function diff()
+    {
+        $file = request()->get('file');
+        $version = request()->get('version');
+        $new_file = RUNTIME_PATH . 'system' . DS . 'upgrade-files' . DS . $version . DS . $file;
+        $old_file = BASE_PATH . DS . $file;
+        if (!file_exists($new_file)) throw new Exception(lang('File not exists'));
+        $new = file_get_contents($new_file);
+        if (!file_exists($old_file)) $old = '';
+        else $old = file_get_contents($old_file);
+        $this->assign('new_file', $new);
+        $this->assign('old_file', $old);
+        return $this->fetch();
+    }
 }
