@@ -66,7 +66,7 @@
                     </div>
                     <div class="top-side-center" :style="{marginLeft: leftWidth + 'px'}">
                         <a-row>
-                            <a-col :xs="24" :sm="24" :md="18" :lg="20">
+                            <a-col :xs="24" :sm="24" :md="18" :lg="19">
                                 <a-menu theme="dark" mode="horizontal" :selected-keys="[activeIframe]" :style="{ lineHeight: '64px' }">
                                     <a-menu-item @click="handleMenuCollapse" class="menu-toggle"> <a-icon type="ordered-list"></a-icon> </a-menu-item>
                                     <a-menu-item @click="handleClickTopMenuItem(url)" v-for="(title, url) in iframes" :key="url"
@@ -78,7 +78,7 @@
                                     <a-menu-item @click="handleClearTopMenu" v-show="Object.keys(iframes).length > 1"> <span>{:lang('Close')}</span> </a-menu-item>
                                 </a-menu>
                             </a-col>
-                            <a-col :xs="0" :sm="0" :md="6" :lg="4">
+                            <a-col :xs="0" :sm="0" :md="6" :lg="5">
                                 <div class="top-side-right">
                                     <a target="_blank" style="color:#ffffffa6;margin: 0 4px;" href="/"><i class="fa fa-home"></i></a>
                                     <a @click="handleRestartSystem" :title="$lang('Restart System')" style="color:#ffffffa6;margin: 0 4px;"><i class="fa fa-power-off"></i></a>
@@ -110,7 +110,7 @@
                 <a-layout>
                     <a-layout-sider :width="leftWidth"
                         :style="{ overflow: 'auto', height: asideMenuHeight, position: 'fixed', left: 0 }">
-                        <yi-menu ref="menuRef" :selected-keys="[activeIframe]" :open-keys.sync="openKeys" @menu-click="handleMenuClick"></yi-menu>
+                        <yi-menu ref="menuRef" :list="menuList" :selected-keys="[activeIframe]" :open-keys.sync="openKeys" @menu-click="handleMenuClick"></yi-menu>
                     </a-layout-sider>
                     <a-layout :style="{ marginLeft: leftWidth + 'px' }">
                         <a-layout-content :style="{ background: '#fff', padding: 0, margin: 0, minHeight: contentHeight }" style="height: 100%;">

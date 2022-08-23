@@ -212,8 +212,23 @@ class Module
             }
 
             $module_path = app_path() . DS . $name . DS;
-            
+            $_tmp_path = runtime_path() . DS . 'temp' . DS . 'modules' . DS . $name . DS . time() . DS;
+            $lock_file_path = $module_path . '.lock';
+            if (is_file($lock_file_path)) {
+                $list = file($lock_file_path);
+                foreach ($list as $v) {
+                    $_v = str_replace(['/', '\\'], [DS, DS], trim($v));
+                    $_lock_file = $module_path . $_v;
+                    $_new_lock_file = $_tmp_path . $_v;
+                    if (is_file($_lock_file)) mkfile($_new_lock_file, file_get_contents($_lock_file));
+                }
+            }
+
             $zip->extractTo($module_path);
+            if (is_dir($_tmp_path)) {
+                copy_files($_tmp_path, $module_path);
+                @rmdirs($_tmp_path, true);
+            }
             static::installSql($name, $info);
             self::copyTheme($name);
             if (!empty($upgrade)) {

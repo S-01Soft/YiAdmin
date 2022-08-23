@@ -11,7 +11,7 @@
  * @link      http://www.workerman.net/
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
+require_once base_path() . '/constant.php';
 $config = [];
 foreach (scandir(app_path()) as $dir) {
     if (in_array($dir, ['.', '..'])) continue;

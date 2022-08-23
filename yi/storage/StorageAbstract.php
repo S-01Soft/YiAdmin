@@ -82,7 +82,7 @@ class StorageAbstract
         }
         $admin = get_admin();
         $user = get_user();
-        $data = AttachmentModel::where('sha1', $file_sha1)->first();
+        $data = AttachmentModel::where('sha1', $file_sha1)->where('type', $this->option('type'))->first();
         if (!empty($data)){
             if ($chunkUpload) @unlink($file->getRealPath());
             return $data->url;
@@ -130,7 +130,7 @@ class StorageAbstract
         return $this;
     }
 
-    public function getFilePaht($attachment)
+    public function getFilePath($attachment)
     {}
 
     public function getUrl($attachment)

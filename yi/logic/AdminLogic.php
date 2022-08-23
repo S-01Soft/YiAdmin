@@ -114,7 +114,8 @@ class AdminLogic extends BaseLogic
             ];
             $payload->form = $this->beforePostAdd($payload->form);
             $this->event('BeforePostAdd', $payload);
-            $this->model = $this->static::create($payload->form);
+            $_form = $this->_filter($payload->form);
+            $this->model = $this->static::create($_form);
             $result = $this->afterPostAdd($this->model, $payload->form);
             $payload->row = $this->model;
             $payload->result = $result;
@@ -184,6 +185,7 @@ class AdminLogic extends BaseLogic
             $payload->form = $this->beforePostEdit($payload->form, $payload->query);
             $this->event('BeforePostEdit', $payload);
             $this->model = $query->first();
+            $payload->form = $this->_filter($payload->form);
             $this->model->update($payload->form);
             $payload->result = $this->afterPostEdit($this->model, $payload->form);
             $payload->row = $this->model;
@@ -226,12 +228,19 @@ class AdminLogic extends BaseLogic
         $this->event('BeforeToggle', $payload);
         $payload->result = $this->beforeToggle($payload->row, $payload->data);
         $this->event('AfterToggle', $payload);
-        return $this->model->update($payload->result);
+        $_form = $this->_filter($payload->result);
+        $this->model->update($_form);
+        return $this->afterToggle($payload->row, $payload->data);
     }
 
     protected function beforeToggle($model, $data)
     {
         return $data;
+    }
+
+    protected function afterToggle($row, $data)
+    {
+        return $row;
     }
 
     public function delete()
@@ -532,5 +541,15 @@ class AdminLogic extends BaseLogic
     protected function event($name, $payload = null)
     {
         event(request()->getName() . $name, $payload);
+    }
+
+    private function _filter($form)
+    {
+        $result = [];
+        $columns = $this->static::getColumns();
+        foreach ($form as $k => $v) {
+            if (in_array($k, $columns)) $result[$k] = $v;
+        }
+        return $result;
     }
 }

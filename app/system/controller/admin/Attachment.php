@@ -9,7 +9,7 @@
 namespace app\system\controller\admin;
 
 use support\exception\Exception;
-use think\exception\ValidateException;
+use yi\exception\ValidateException;
 
 /**
  * @Menu(title=Attachments,weigh=75000,ignore=add|edit|tree|tree_list|tree_array|toggle|imports|exports|getAttributes|getScenes|getGroups,ismenu=1)

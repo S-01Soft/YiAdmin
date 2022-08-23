@@ -94,7 +94,7 @@ class AuthGroupLogic extends Logic
             $my_rules = array_merge($my_rules, explode(',', $group['rules']));
         }
         foreach ($rules as $rule) {
-            if (!in_array($rule, $my_rules)) throw new Exception(lang('It is beyond your permission'));
+            if (!empty($rule) && !in_array($rule, $my_rules)) throw new Exception(lang('It is beyond your permission'));
         }
     }
 

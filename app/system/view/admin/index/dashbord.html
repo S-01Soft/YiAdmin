@@ -17,7 +17,7 @@
         font-weight: 700;
     }
     .quick-menu .menu-item {
-        padding: 10px;
+        padding: 20px 10px;
     }
     .quick-menu .menu-item:hover {
         background: #eee;
@@ -78,7 +78,7 @@
                 </a-popconfirm>
             </div>
             <a-row>
-                <a-col :xs="8" :sm="6" :md="3" :lg="2" v-for="(item,index) in quick_menu_list" :key="index" class="text-center pointer menu-item" @click="handleOpen(item, index)">
+                <a-col :xs="8" :sm="6" :md="3" :lg="3" v-for="(item,index) in quick_menu_list" :key="index" class="text-center pointer menu-item" @click="handleOpen(item, index)">
                     <i v-show="quickMenu.editable" class="fa fa-minus" style="position: absolute;top: 5px;right:5px;color:#ED4138;" @click="handleRemoveMenu(item, index, $event)"></i>
                     <i style="font-size: 18px;" :class="item.icon"></i>
                     <div style="margin-top: 10px;">{{ $lang(item.title) }}</div>

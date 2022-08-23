@@ -2,7 +2,7 @@
 
 namespace app\system\logic\admin;
 
-use think\Exception;
+use support\exception\Exception;
 use yi\Auth;
 use app\system\model\admin\AuthGroupAccessModel;
 

@@ -16,7 +16,7 @@ return [
     support\bootstrap\AppInit::class,
     support\bootstrap\Event::class,
     support\bootstrap\Session::class,
-    support\bootstrap\LaravelDb::class,
+    support\bootstrap\LaravelDatabase::class,
     support\bootstrap\LaravelLog::class,
     support\bootstrap\Sync::class,
 ];

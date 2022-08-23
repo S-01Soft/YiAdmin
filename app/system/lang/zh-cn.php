@@ -138,7 +138,8 @@ return [
     'The addon is exsist' => '插件已存在',
     'Please disable the plugin first' => '请先禁用插件！',
     'Remote server error, please try again' => '远程服务器错误，请重试',
-    
+    'Get System UpgradeFiles' => '获取系统升级文件',
+    'Files Diff' => '文件比对',
     'File type is not supported' => '不支持的文件格式',
     'File size out of limit' => '文件大小超出限制',
     'File Not Exsists' => '文件不存在',

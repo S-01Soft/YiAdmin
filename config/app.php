@@ -22,6 +22,6 @@ return [
     'runtime_path' => base_path(false) . DIRECTORY_SEPARATOR . 'runtime',
     'controller_suffix' => '',
     'dispatch_error_tmpl' => app_path() . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'error.html',
-    'api_url' => 'https://www.01soft.top',
+    'api_url' => 'https://www.yiadmin.net',
     'sql_log' => env('SQL_LOG', false),
 ];

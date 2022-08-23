@@ -4,7 +4,7 @@ namespace yi\storage;
 
 interface StorageInterface
 {
-    public function getFilePaht($attachment);
+    public function getFilePath($attachment);
 
     public function getUrl($attachment);
 

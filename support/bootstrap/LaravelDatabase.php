@@ -16,18 +16,22 @@ namespace support\bootstrap;
 
 use Webman\Bootstrap;
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Schema;
 use Jenssegers\Mongodb\Connection;
 use Workerman\Worker;
 use Workerman\Timer;
 use support\Db;
+use support\Cache;
 
 /**
  * Class Laravel
  * @package support\bootstrap
  */
-class LaravelDb implements Bootstrap
+class LaravelDatabase implements Bootstrap
 {
     /**
      * @param Worker $worker
@@ -70,7 +74,20 @@ class LaravelDb implements Bootstrap
         $capsule->setAsGlobal();
 
         $capsule->bootEloquent();
+        QueryBuilder::macro('getColumns', function() {
+            $_tableName = $this->from;
+            if (stripos($_tableName, 'as') !== false){
+                $_tableName = trim(explode('as', $_tableName)[0]);
+            }
+            $_connectionName = $this->connection->getConfig('name');
+            $columns = Db::connection($_connectionName)->getSchemaBuilder()->getColumnListing($_tableName);
+            return $columns;
+        });
 
+        EloquentBuilder::macro('getColumns', function(){
+            return $this->getQuery()->getColumns();
+        });
+        
         // Heartbeat
         if ($worker) {
             Timer::add(55, function () use ($connections) {

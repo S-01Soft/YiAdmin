@@ -91,7 +91,7 @@
             <div :class="item.id==0 ? '' : 'rule-header'">
                 <label class="rule-label" v-if="item.id!=0">
                     <input type="checkbox" @change="handleChange(item.id, $event)" :checked="data.indexOf(item.id) != -1" />
-                    <span class="rule-title">{{item.title}}</span>
+                    <span class="rule-title">{{item.title_txt}}</span>
                 </label>
                 <span v-if="item.childlist.length" class="choose-all pointer" @click="handleChooseAll(item)">{:lang('Choose All')}</span>
                 <span v-if="item.childlist.length" class="unchoose-all pointer" @click="handleUnChooseAll(item)">{:lang('Unchoose All')}</span>

@@ -2,9 +2,6 @@
 
 namespace yi\logic;
 
-use yi\Tree;
-use think\Exception;
-
 class BaseLogic
 {
     public $model;

@@ -124,6 +124,7 @@ export default {
         },
         handleChange: function (data) {
             this.$emit('upload', data.file);
+            var file = data.file;
             if (this.loading) {
                 var status = data.file.status;
                 if (status === "uploading") {
@@ -137,28 +138,40 @@ export default {
                     this.hideLoading = null;
                 }
             }
-            var fileList = data.fileList;
-            fileList = fileList.filter(function (item) {
-                return item.status !== undefined;
-            });
-            var files = [];
-            for (var i = 0; i < fileList.length; i++) {
-                var file = fileList[i];
-                if (file.response) {
-                    if (file.response.code == 1) {
-                        file.url = file.response.data;
-                    }
-                    if (this.t_files.indexOf(file.uid) == -1) {
-                        this.t_files.push(file.uid);
-                        this.$emit("response", file.response);
-                    }
+            if (file.status == 'done') {
+                let files = this.val == '' ? [] : this.val.split(',');
+                let url = file.response.data;
+                if (this.t_files.indexOf(file.uid) == -1) {
+                    this.t_files.push(file.uid);
+                    this.$emit("response", file.response);
                 }
-                fileList[i] = file;
-                if (this.multiple) files.push(file.url);
-                else files = [file.url]
+                if (this.multiple) files.push(url);
+                else files = [url]
+                this.val = files.join(',')
             }
-            this.fileList = files;
-            this.val = files.join(",");
+            // var fileList = data.fileList;
+
+            // fileList = fileList.filter(function (item) {
+            //     return item.status !== undefined;
+            // });
+            // var files = [];
+            // for (var i = 0; i < fileList.length; i++) {
+            //     file = fileList[i];
+            //     if (file.response) {
+            //         if (file.response.code == 1) {
+            //             file.url = file.response.data;
+            //         }
+            //         if (this.t_files.indexOf(file.uid) == -1) {
+            //             this.t_files.push(file.uid);
+            //             this.$emit("response", file.response);
+            //         }
+            //     }
+            //     fileList[i] = file;
+            //     if (this.multiple) files.push(file.url);
+            //     else files = [file.url]
+            // }
+            // this.fileList = files;
+            // this.val = files.join(",");
         },
     },
 };

@@ -2,6 +2,7 @@
     <a-menu
         mode="inline"
         theme="dark"
+        :list = "list"
         :inline-collapsed="collapsed"
         v-bind="{ ...$props, ...$attrs }"
         v-on="$listeners"
@@ -13,7 +14,7 @@
             <yi-sub-menu v-else :key="item.childlist.length == 1 ? item.childlist[0].name : item.name" :menu-info="item" @menu-click="$emit('menu-click', $event)"></yi-sub-menu>
         </template>
         <a-menu-item>
-            <a href="https://www.01soft.top" target="_blank"><i class="fa fa-home"></i> <span>访问官网</span> </a>    
+            <a href="https://www.yiadmin.net" target="_blank"><i class="fa fa-home"></i> <span>访问官网</span> </a>    
         </a-menu-item>
     </a-menu>
 </template>
@@ -23,18 +24,16 @@ export default {
     data() {
         return {
             collapsed: false,
-            list: [],
         };
     },
+    props: {
+        list: {
+            default: []
+        }
+    },
     mounted() {
-        this.getMenuList();
     },
     methods: {
-        getMenuList() {
-            this.$http.post("system/admin/index/index").then((data) => {
-                this.list = data;
-            });
-        },
     },
 };
 </script>

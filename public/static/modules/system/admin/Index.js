@@ -33,6 +33,7 @@ define([], function () {
                 mounted: function () {
                     this.init();
                     self = this;
+                    this.getMenuList();
                     this.calcSytles();
                     window.addEventListener('resize', function () {
                         self.calcSytles();
@@ -165,8 +166,13 @@ define([], function () {
                         })
                     },
                     refreshMenu: function() {
-                        this.$refs.menuRef.getMenuList();
-                    }
+                        this.getMenuList();
+                    },
+                    getMenuList: function() {
+                        this.$http.post("/system/admin/index/index").then(function(data) {
+                            self.menuList = data;
+                        });
+                    },
                 }
             };
             return option;

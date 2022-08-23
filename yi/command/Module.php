@@ -81,12 +81,14 @@ class Module extends Command
                                 if (!empty($res)) return;
                             }
                             $relativePath = str_replace(DS, '/', substr($file, strlen($module_dir)));
-                            if (!empty($env) && Str::endsWith($it->getFilename(), '.' . $env)) {
-                                $relativePath = substr($relativePath, 0, strlen($relativePath) - strlen('.' . $env));
-                                $cache_files[] = $file;
+                            if (Str::endsWith($file, '-ENV')) {
+                                if (empty($env)) return;
+                                if (substr($file, -strlen($env . '-ENV'), -4) != $env) return;
+                                $newRelativePath = substr($relativePath, 0, -strlen('.' . $env . '-ENV'));
+                                $zip->addFile($file, $newRelativePath);
+                                $cache_files[] = substr($file, 0, -strlen('.' . $env . '-ENV'));
                             }
-    
-                            $zip->addFile($file, $relativePath);
+                            else $zip->addFile($file, $relativePath);
                         }
                     });
                     $zip->close();

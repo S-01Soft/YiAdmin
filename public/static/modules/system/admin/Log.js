@@ -44,7 +44,7 @@ define([], function() {
                 }, }, 
                 { title: $lang('Created At'), dataIndex: 'created_at', key: 'created_at', customRender: Yi.render.date, }, 
                 
-                { title: $lang('Operate'),key: 'action$',scopedSlots: { customRender: 'action' },},
+                { title: $lang('Operate'),key: 'action$',scopedSlots: { customRender: 'action' }, visible: false},
             ];
             var option = {
                 template: '#app',

@@ -74,7 +74,7 @@
                     :key="index"
                 >
                     <div class="img" style="height: 120px">
-                        <img :src="imageShow(item)" alt="" />
+                        <img :src="imageShow(item)" />
                     </div>
                     <div
                         @click="handleDelete(item, index)"
@@ -194,6 +194,10 @@ export default {
 };
 </script>
 <style scoped>
+.yi-upload-image-list {
+    display: flex;
+    flex-wrap: wrap;
+}
 .yi-attachment .yi-upload-image-list .yi-upload-image-item {
     display: table-cell;
     text-align: center;
@@ -205,11 +209,12 @@ export default {
     border-radius: 5px;
     vertical-align: middle;
 }
-
 .yi-attachment .img {
     height: 120px;
+
 }
 .yi-attachment .img img {
     max-height: 120px;
+    max-width: 100%;
 }
 </style>

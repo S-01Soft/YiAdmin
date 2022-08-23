@@ -37,7 +37,7 @@ CHANNEL_PORT = 2206
 
 ## 官网
 
-https://www.01soft.top
+https://www.yiadmin.net
 
 ## LICENSE
 MIT

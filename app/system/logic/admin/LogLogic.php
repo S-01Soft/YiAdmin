@@ -1,10 +1,4 @@
 <?php
-/*
- * @Author: 01Soft
- * @Website: https://www.01soft.top
- * @Date: 2021-03-08
- * @LastEditors: 01Soft
- */
 
 namespace app\system\logic\admin;
 
@@ -20,5 +14,10 @@ class LogLogic extends Logic
     {
         $this->static = \app\system\model\admin\LogModel::class;
         parent::initialize();
+    }
+
+    public function paginateView($c) 
+    {
+        $c->hidden = ['add_btn', 'slot_edit_btn'];
     }
 }

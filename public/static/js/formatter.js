@@ -160,7 +160,7 @@ define(function () {
                             fixInput();
                         });
 
-                        var lodash = _;
+                        var lodash = __;
                         uploader.on('uploadBeforeSend', function(obj, data, headers) {
                             headers = lodash.merge(headers, {
                                 'X-Requested-With': 'XMLHttpRequest'
