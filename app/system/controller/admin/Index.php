@@ -2,6 +2,7 @@
 
 namespace app\system\controller\admin;
 
+use support\exception\Exception;
 use support\Db;
 use yi\Auth;
 use yi\Tree;
@@ -270,16 +271,20 @@ class Index extends Base
      */
     public function diff()
     {
-        $file = request()->get('file');
-        $version = request()->get('version');
-        $new_file = RUNTIME_PATH . 'system' . DS . 'upgrade-files' . DS . $version . DS . $file;
-        $old_file = BASE_PATH . DS . $file;
-        if (!file_exists($new_file)) throw new Exception(lang('File not exists'));
-        $new = file_get_contents($new_file);
-        if (!file_exists($old_file)) $old = '';
-        else $old = file_get_contents($old_file);
-        $this->assign('new_file', $new);
-        $this->assign('old_file', $old);
-        return $this->fetch();
+        try {
+            $file = request()->get('file');
+            $version = request()->get('version');
+            $new_file = RUNTIME_PATH . 'system' . DS . 'upgrade-files' . DS . $version . DS . $file;
+            $old_file = BASE_PATH . DS . $file;
+            if (!file_exists($new_file)) throw new Exception(lang('File not exists'));
+            $new = file_get_contents($new_file);
+            if (!file_exists($old_file)) $old = '';
+            else $old = file_get_contents($old_file);
+            $this->assign('new_file', $new);
+            $this->assign('old_file', $old);
+            return $this->fetch();
+        } catch (Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 }

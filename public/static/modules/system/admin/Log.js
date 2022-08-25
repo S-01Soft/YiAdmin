@@ -14,7 +14,7 @@ define([], function() {
                 { title: $lang('URL'), dataIndex: 'url', key: 'url', customRender: Yi.render.html, width: '150px', search: {
                     type: 'input', s: 'like'
                 } }, 
-                { title: $lang('Title'), dataIndex: 'title', key: 'title', customRender: Yi.render.html, width: '100px', }, 
+                { title: $lang('Title'), dataIndex: 'title', key: 'title', customRender: Yi.render.html, width: '100px', visible: false}, 
                 { title: $lang('Content'), dataIndex: 'content', key: 'content', customRender: Yi.render.html, width: '200px', }, 
                 { title: $lang('Mehotd'), dataIndex: 'method', key: 'method', customRender: Yi.render.html, }, 
                 { title: $lang('Type'), dataIndex: 'type', key: 'type', customRender: Yi.render.html, search: {
@@ -37,12 +37,25 @@ define([], function() {
                         class: 'line-1'
                     }, row.user_agent_txt || val)]);
                 }, width: '200px', }, 
+                { title: $lang('Referer'), dataIndex: 'referer', key: 'referer', width: '150px', customRender: function(val, row, index, column) {
+                    var h = $vm.$createElement;
+                    return h('a-tooltip', {
+                        props: {
+                            title: val
+                        }
+                    }, [h('div', {
+                        style: 'width: 150px',
+                        class: 'line-1'
+                    }, row.user_agent_txt || val)]);
+                }, width: '200px', }, 
                 { title: $lang('IP'), dataIndex: 'ip', key: 'ip', customRender: function(val, row, index, column) {
                     var el = val;
                     if (row.ip_txt) el = row.ip_txt + ' [' + val + ']';
                     return Yi.render.html(val, row, index, column, el);
                 }, }, 
-                { title: $lang('Created At'), dataIndex: 'created_at', key: 'created_at', customRender: Yi.render.date, }, 
+                { title: $lang('Created At'), dataIndex: 'created_at', key: 'created_at', customRender: Yi.render.date, search: {
+                    type: 'date'
+                }}, 
                 
                 { title: $lang('Operate'),key: 'action$',scopedSlots: { customRender: 'action' }, visible: false},
             ];

@@ -1,0 +1,1 @@
+ALTER TABLE `__PREFIx__log` CHANGE `referer` `referer` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '来源';
