@@ -76,8 +76,8 @@ class LaravelDatabase implements Bootstrap
         $capsule->bootEloquent();
         QueryBuilder::macro('getColumns', function() {
             $_tableName = $this->from;
-            if (stripos($_tableName, 'as') !== false){
-                $_tableName = trim(explode('as', $_tableName)[0]);
+            if (stripos($_tableName, ' as ') !== false){
+                $_tableName = trim(explode(' as ', $_tableName)[0]);
             }
             $_connectionName = $this->connection->getConfig('name');
             $columns = Db::connection($_connectionName)->getSchemaBuilder()->getColumnListing($_tableName);
@@ -87,7 +87,7 @@ class LaravelDatabase implements Bootstrap
         EloquentBuilder::macro('getColumns', function(){
             return $this->getQuery()->getColumns();
         });
-        
+
         // Heartbeat
         if ($worker) {
             Timer::add(55, function () use ($connections) {

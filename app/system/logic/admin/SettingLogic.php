@@ -27,9 +27,9 @@ class SettingLogic extends Logic
         ])->first();
         $form['user_id'] = get_admin()->id;
         if (empty($row)) { 
-            $this->model->save($form);
+            $this->static::create($form);
         }
-        else $row->save($form);
+        else $row->update($form);
     }
 
     protected function beforeDelete($query)
