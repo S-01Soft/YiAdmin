@@ -62,7 +62,7 @@ class Module extends Command
                     if (!is_dir($module_tmp_path)) {
                         @mkdir($module_tmp_path, 0755, true);
                     }
-                    $module = $module_tmp_path . $name . '-' . $info['version'] . ($backup ? '-' . time() : '') . '.zip';
+                    $module = $module_tmp_path . $name . '-' . ($env == 'pro' ? '' : $env . '-') . $info['version'] . ($backup ? '-' . time() : '') . '.zip';
                     
                     $zip = new \ZipArchive;
                     $zip->open($module, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);

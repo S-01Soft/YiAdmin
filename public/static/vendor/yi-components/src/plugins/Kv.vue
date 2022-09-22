@@ -60,7 +60,8 @@ export default {
     },
   },
   mounted: function () {
-      this.option = this.value;
+    if (Yi.isEmpty(this.value)) this.option = {}
+    else this.option = this.value;
   },
   methods: {
     addItem: function () {

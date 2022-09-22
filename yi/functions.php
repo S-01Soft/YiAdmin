@@ -634,18 +634,19 @@ function version_sort($versions, $asc = true) {
 
 function split_sql($file)
 {
-    if (file_exists($file)) {
-        $prefix = config('database.connections.' . config('database.default') . '.prefix');
-        $sql = file_get_contents($file);
-        $sql = str_replace("\r", "\n", $sql);
-        $sql = str_replace("BEGIN;\n", '', $sql);
-        $sql = str_replace("COMMIT;\n", '', $sql);
-        $sql = trim($sql);
-        $sql  = str_replace(" `__PREFIX__", " `{$prefix}", $sql);
-        $sqls = explode(";\n", $sql);
-        return $sqls;
+    if (!file_exists($file)) return [];
+    $prefix = get_db_config()['prefix'];
+    $sql = "";
+    $result = [];
+    foreach (file($file) as $line) {
+        $line = str_replace(["`__PREFIX__", "\r\n"], ['`' . $prefix, "\n"], $line);
+        $sql .= $line;
+        if (Str::endsWith(trim($line), ";")) {
+            $result[] = trim($sql);
+            $sql = "";
+        }
     }
-    return [];
+    return $result;
 }
 
 function get_db_config()

@@ -19,17 +19,7 @@ class SettingLogic extends Logic
 
     public function postAdd($form = [])
     {
-        $form['data'] = json_encode($form['data'], JSON_UNESCAPED_UNICODE);
-        $row = $this->static::where([
-            ['user_id', '=', get_admin()->id],
-            ['scene', '=', 'admin'],
-            ['key', '=', $form['key']]
-        ])->first();
-        $form['user_id'] = get_admin()->id;
-        if (empty($row)) { 
-            $this->static::create($form);
-        }
-        else $row->update($form);
+        $this->set($form['data'], get_admin()->id, $form['key']);
     }
 
     protected function beforeDelete($query)
@@ -51,7 +41,7 @@ class SettingLogic extends Logic
     public function set($content, $user_id, $key = 'default', $scene = 'admin')
     {
         $data = $this->static::where('scene', $scene)->where('user_id', $user_id)->where('key', $key)->first();
-        $content = is_string($content) || is_numeric($content) || is_bool($content) ? $content : json_encode($content, 1);
+        $content = is_string($content) || is_numeric($content) || is_bool($content) ? $content : htmlspecialchars_decode(json_encode($content, 1));
         if (empty($data)) {
             $this->static::create([
                 'user_id' => $user_id,

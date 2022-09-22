@@ -188,7 +188,6 @@ define(function () {
                                 }
                                 var r = File.add(file);
                                 uploader.removeFile(file, true);
-                                uploader.reset();
                                 Event.fire('uploader.uploadSuccess', file, self, uploader);
                                 if (r) Toastr.success(res.message || $lang('Upload Successful'));
                             } else {
