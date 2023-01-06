@@ -168,12 +168,14 @@
                 :data-id="'i-' + item.name"
                 :s="activeTab + '-' + key"
                 :show="activeTab == key"
+                :option="item.options"
               ></yi-editormd>
               <yi-coder
                 v-if="item.type == 'code'"
                 v-model="form[item.name]"
                 :s="activeTab + '-' + key"
                 :show="activeTab == key"
+                :option="item.options"
               ></yi-coder>
             </a-form-item>
             <div v-show="showRemove && currentItem.name == item.name" class="form-item-operate">
@@ -257,7 +259,7 @@
           </div>
           <div
             v-if="
-              ['select', 'selects', 'radio', 'checkbox', 'number', 'file'].indexOf(
+              ['select', 'selects', 'radio', 'checkbox', 'number', 'file', 'code', 'editor'].indexOf(
                 itemForm.type
               ) != -1
             "
@@ -377,7 +379,7 @@ export default {
         { key: "file", value: "文件" , options: {accept: '*'}},
         { key: "color", value: "颜色" },
         { key: "editor", value: "富文本编辑器" },
-        { key: "code", value: "代码编辑器" },
+        { key: "code", value: "代码编辑器", options: {} },
         { key: "hidden", value: "隐藏" },
       ],
       currentItem: {}

@@ -185,8 +185,8 @@ class AdminLogic extends BaseLogic
             $payload->form = $this->beforePostEdit($payload->form, $payload->query);
             $this->event('BeforePostEdit', $payload);
             $this->model = $query->first();
-            $payload->form = $this->_filter($payload->form);
-            $this->model->update($payload->form);
+            $form = $this->_filter($payload->form);
+            $this->model->update($form);
             $payload->result = $this->afterPostEdit($this->model, $payload->form);
             $payload->row = $this->model;
             $this->event('AfterPostEdit', $payload);

@@ -71,7 +71,7 @@ function cache()
         case 1:
             return Cache::get($args[0]);
         case 2:
-            Cache::set($args[0], $args[1]);
+            Cache::set(...$args);
             break;
     }
 }
@@ -570,13 +570,13 @@ function filter($value, $callbacks = [])
         array_walk_recursive($value, function(&$item) use ($callbacks) {
             if (is_string($item)) {
                 foreach ($callbacks as $cb) {
-                    if (!empty($cb)) $item = $cb($item);
+                    if (is_callable($cb)) $item = call_user_func($cb, $item);
                 }
             }
         });
     } else {
         foreach ($callbacks as $cb) {
-            if (!empty($cb)) $value = $cb($value);
+            if (is_callable($cb)) call_user_func($cb, $value);
         }
     }
     return $value;
@@ -804,4 +804,20 @@ function get_table_key_name($table)
         if ($item->Key == 'PRI') return $item->Field;
     }
     return '';
+}
+
+if (!function_exists('str_to_kv')) {
+    function str_to_kv($str)
+    {
+        $result = [];
+        $str = preg_replace("/[,|\s]+/", ",", trim($str));
+        $data = explode(',', $str);
+        foreach ($data as $v) {
+            $arr = explode('=', $v, 2);
+            if (count($arr) == 2) {
+                $result[$arr[0]] = is_numeric($arr[1]) ? ($arr[1] + 0) : $arr[1];
+            }
+        }
+        return $result;
+    }
 }

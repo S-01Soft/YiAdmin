@@ -499,6 +499,7 @@ class Validate
                 [$key, $title] = explode('|', $key);
             } else {
                 $title = $this->field[$key] ?? $key;
+                if ($this->lang->has($title)) $title = $this->lang->get($title);
             }
 
             // 场景检测

@@ -28,5 +28,7 @@ class Event implements Bootstrap
                 }
             }
         }
+        
+        event('AppInit');
     }
 }

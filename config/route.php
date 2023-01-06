@@ -86,7 +86,8 @@ $_app_route_init = function() {
                     $short_class = $array[0];
                     $action = 'index';
                 } else [$short_class, $action] = $array;
-                $class_name = str_replace('/', '\\', 'app\\' . $name . '\\controller\\' . $short_class);
+                if (Str::startsWith($short_class, "\\")) $class_name = $short_class;
+                else $class_name = str_replace('/', '\\', 'app\\' . $name . '\\controller\\' . $short_class);
                 $parseRoute('/' . $uri, $class_name, $action);
             }
         }

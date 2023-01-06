@@ -5,7 +5,7 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 use support\Redis;
 
 return [
-    'default' => 'file',
+    'default' => env('CACHE_DRIVER', 'file'),
     'adapters' => [
         'file' => [
             'handler' => function() {
