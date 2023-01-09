@@ -38,5 +38,6 @@ return [
     'We have sent the verification code to your email %s, please check' => '我们已向您的邮箱 %s 发送了验证码，请您注意查收。',
     'SMS verification code has been sent, please check' => '短信验证码已发送，请注意查收',
     'Verification code send fail' => '验证码发送失败',
-    'New Window' => '弹窗'
+    'New Window' => '弹窗',
+    'Disk Usable Percent' => '可用磁盘'
 ];

@@ -5,7 +5,6 @@
         :style="{ display: type == 'card' ? 'inline-block' : '' }"
     >
         <div v-if="type == 'card'" @click="handleOpen">
-            <slot>
                 <div v-for="(v, i) in fileList" :key="i">
                     <div
                         :style="{ width: imageWidth, height: imageHeight }"
@@ -21,10 +20,12 @@
                             display: inline-block;
                             margin-left: 5px;
                         "
-                        class="pointer iconfont iconshanchu3"
+                        class="pointer"
                         v-if="v"
                         @click.stop="handleDelete(v, i)"
-                    ></div>
+                    >
+                    <a-icon type="delete"></a-icon>
+                    </div>
                 </div>
                 <div
                     style="
@@ -42,7 +43,6 @@
                 >
                     <a-icon type="plus"></a-icon>
                 </div>
-            </slot>
         </div>
         <div v-else>
             <div class="input-group">

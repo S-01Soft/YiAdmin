@@ -8,6 +8,16 @@ class Event
 {
     protected $classMaps = [];
 
+    public function onAppInit()
+    {
+        \Illuminate\Container\Container::getInstance()->bind('Illuminate\Pagination\LengthAwarePaginator', function($app, $options) {
+            return new \yi\pagination\LengthAwarePaginator($options['items'], $options['total'], $options['perPage'], $options['currentPage'], $options['options']);
+        });
+        \Illuminate\Container\Container::getInstance()->bind('Illuminate\Pagination\Paginator', function($app, $options) {
+            return new \yi\pagination\Paginator($options['items'], $options['perPage'], $options['currentPage'], $options['options']);
+        });
+    }
+
     public function onHttpRun()
     {
         \Illuminate\Pagination\Paginator::currentPageResolver(function ($pageName = 'page') {

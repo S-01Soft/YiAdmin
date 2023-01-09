@@ -23,7 +23,7 @@ class LaravelLog implements Bootstrap
                 }
             }
             $execute = Str::replaceArray('?', $bindings, $sql);
-            logs()->info('SQL ' . $execute);
+            logs()->info('SQL [' . $query->time . ' ms] ' . $execute);
         });
     }
 }

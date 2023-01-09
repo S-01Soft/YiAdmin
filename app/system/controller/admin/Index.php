@@ -46,7 +46,13 @@ class Index extends Base
         if (ini_get('file_uploads')) $data['upload_size'] = ini_get('upload_max_filesize');
         else $data['upload_size'] = 'Upload Disabled';
         $data['memory'] = format_bytes(memory_get_usage());
-
+        $free_disk = disk_free_space('.');
+        $total_disk = disk_total_space('.');
+        $data['disk'] = [
+            'total' => $total_disk,
+            'free' => $free_disk,
+            'usable_percent' => round($free_disk / $total_disk * 100) . '%'
+        ];
         $this->assign('data', $data);
         return $this->fetch();
     }

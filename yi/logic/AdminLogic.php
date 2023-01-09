@@ -185,6 +185,7 @@ class AdminLogic extends BaseLogic
             $payload->form = $this->beforePostEdit($payload->form, $payload->query);
             $this->event('BeforePostEdit', $payload);
             $this->model = $query->first();
+            $payload->form = $this->beforeSaveEdit($payload->form, $this->model);
             $form = $this->_filter($payload->form);
             $this->model->update($form);
             $payload->result = $this->afterPostEdit($this->model, $payload->form);
@@ -212,6 +213,11 @@ class AdminLogic extends BaseLogic
     protected function afterPostEdit($model, $form = [])
     {
         return $model;
+    }
+
+    protected function beforeSaveEdit($form, $model)
+    {
+        return $form;
     }
 
     public function toggle($id, $params)

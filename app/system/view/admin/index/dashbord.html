@@ -138,8 +138,10 @@
                     <p><span>{:lang("MYSQL Version")}：</span> <span>{$data.mysql}</span> </p>
                     <p><span>{:lang("Upload Size")}：</span> <span>{$data.upload_size}</span> </p>
                     <p><span>{:lang("Memory Used")}：</span> <span>{$data.memory|raw}</span> </p>
-                    <p><span>{:lang("System Version")}：</span><span>{:get_version()}</span>
-                    <a @click="Yi.open({title: $lang('App Upgrade'), content: '/system/admin/index/upgrade', area: ['450px', '95%']})" title="{:lang('App Upgrade')}">{:lang("Check for updates")}</a></p>
+                    <p><span>{:lang("Disk Usable Percent")}：</span>{$data.disk.usable_percent} [{:format_bytes($data.disk.free)} / {:format_bytes($data.disk.total)}]</p>
+                    <p><span>{:lang("System Version")}：</span><span>{:get_version()} </span>
+                        <a @click="Yi.open({title: $lang('App Upgrade'), content: '/system/admin/index/upgrade', area: ['450px', '95%']})" title="{:lang('App Upgrade')}">{:lang("Check for updates")}</a>
+                    </p>
                 </a-card>
             </a-col>
             {:widget('dashbord_after_card_item')}

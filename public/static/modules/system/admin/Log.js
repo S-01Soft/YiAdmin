@@ -21,8 +21,8 @@ define([], function() {
                     type: 'input'
                 }}, 
                 { title: $lang('App'), dataIndex: 'app', key: 'app', customRender: Yi.render.html, search: {
-                    type: 'remoteSelect', value: null, auto: true, option: { paginate: false, labelField: 'title', valueField: 'name', url: '/system/admin/index/getApps', getData: function(_data) {
-                        _data = [{name: null, title: $lang('All')}].concat(_data);
+                    type: 'remoteSelect', value: '', auto: true, option: { paginate: false, labelField: 'title', valueField: 'name', url: '/system/admin/index/getApps', getData: function(_data) {
+                        _data = [{name: '', title: $lang('All')}].concat(_data);
                         return _data;
                     }}
                 }}, 
