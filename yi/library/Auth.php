@@ -56,7 +56,7 @@ class Auth
      */
     public function check($name, $uid = null, $type = 1, $mode = '', $relation = 'or')
     {
-        $uid = $uid ?: $auth->id;
+        $uid = $uid ?: $this->id;
         if (!$this->config['auth_on']) {
             return true;
         }

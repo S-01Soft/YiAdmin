@@ -192,7 +192,11 @@ class Menu extends Command
     {
         $name = str_replace(DS, '.', $name);
         $arr = ['/' . $app, preg_replace_callback("/(?<=\.)\S+/", function($matches) {
-            return Str::snake($matches[0]);
+            $arr = explode('.', $matches[0]);
+            $str = Str::snake($arr[count($arr) - 1]);
+            unset($arr[count($arr) - 1]);
+            if (empty($arr)) return $str;
+            return implode('/', $arr) . '/' . $str;
         }, $name)];
         if (empty($arr)) return null;
         $module = $arr[0];

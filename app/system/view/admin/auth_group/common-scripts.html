@@ -77,9 +77,6 @@
         display: inline-block;
         padding: 5px;
     }
-    .choose-all, .unchoose-all {
-        margin: 0 5px;
-    }
     .rule-container>.rule-header {
         background: #eee;
         padding: 0 5px;
@@ -91,12 +88,18 @@
             <div :class="item.id==0 ? '' : 'rule-header'">
                 <label class="rule-label" v-if="item.id!=0">
                     <input type="checkbox" @change="handleChange(item.id, $event)" :checked="data.indexOf(item.id) != -1" />
-                    <span class="rule-title">{{item.title_txt}}</span>
+                    <span class="rule-title" :title="item.name">{{item.title_txt}}</span>
                 </label>
-                <span v-if="item.childlist.length" class="choose-all pointer" @click="handleChooseAll(item)">{:lang('Choose All')}</span>
-                <span v-if="item.childlist.length" class="unchoose-all pointer" @click="handleUnChooseAll(item)">{:lang('Unchoose All')}</span>
+                <span v-if="item.childlist.length">
+                    [<span class="choose-all pointer" @click="handleChooseAll(item)">{:lang('Choose All')}</span> /
+                    <span class="unchoose-all pointer" @click="handleUnChooseAll(item)">{:lang('Unchoose All')}</span>
+                    <span v-if="item.id != 0">/
+                        <span class="pointer" @click="handleSetShow(item.id)" v-show="!isShow(item.id)">展开</span><span class="pointer" @click="handleSetHidden(item.id)" v-show="isShow(item.id)">收起</span></span>]
+                </span>
             </div>
-            <sub-rules class="rule-sub-container" v-if="item.childlist.length" :list="item.childlist" v-model="data"></sub-rules>
+            <div v-show="isShow(item.id)">
+                <sub-rules class="rule-sub-container" v-if="item.childlist.length" :list="item.childlist" v-model="data"></sub-rules>
+            </div>
         </div>
     </div>
 </template>
@@ -113,7 +116,8 @@
             template: '#sub-rules',
             data: function() {
                 return {
-                    data: []
+                    data: [],
+                    showList: []
                 }
             },
             props: {
@@ -160,7 +164,18 @@
                         var index = self.data.indexOf(id);
                         if (index != -1) self.data.splice(index, 1);
                     })
-
+                },
+                isShow: function(id) {
+                    if (id == 0) return true;
+                    return this.showList.indexOf(id) != -1;
+                },
+                handleSetShow: function(id) {
+                    var index = this.showList.indexOf(id);
+                    if (index == -1) this.showList.push(id);
+                },
+                handleSetHidden: function(id) {
+                    var index = this.showList.indexOf(id);
+                    if (index != -1) this.showList.splice(index, 1);
                 }
             }
         })

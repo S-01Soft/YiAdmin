@@ -29,6 +29,7 @@
                         v-if="item.search.type == 'select'"
                         v-model="item.search.value"
                         :placeholder="item.search.placeholder || ''"
+                        v-bind="{...item.search.attrs || {}, ...item.search.props || {}}"
                     >
                         <a-select-option
                             v-for="(v, i) in item.search.options"

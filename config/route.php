@@ -100,7 +100,7 @@ $_app_route_init = function() {
         scan_dir($dir, function($it, $iterator) use ($dir, $name, $route, $parseRoute) {
             if ($it->isDir() || $it->getExtension() != 'php') return;
             $s_path = substr(substr($it->getPathname(), strlen($dir)), 0, -4);
-            $uri = '/' . $name . '/' . str_replace(['/_', '\\_'], ['/', '/'], Str::snake($s_path));
+            $uri = '/' . $name . '/' . str_replace(['/_', '\\_', '\\'], ['/', '/', '/'], Str::snake($s_path));
             $class_name = 'app\\' . $name . '\\controller\\' . $s_path;
             $class_name = str_replace('/', '\\', 'app\\' . $name . '\\controller\\' . $s_path);
             $parseRoute($uri, $class_name);

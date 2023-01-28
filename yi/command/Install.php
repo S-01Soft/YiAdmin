@@ -28,6 +28,7 @@ class Install extends Command
     protected function configure()
     {
         $this->addOption('name', 'u', InputOption::VALUE_OPTIONAL, 'admin name')
+            ->addOption('nickname', 'm', InputOption::VALUE_OPTIONAL, 'admin nickname, default Admin')
             ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'admin password, default 123456');
     }
 
@@ -45,6 +46,7 @@ class Install extends Command
         $this->output = $output;
         $username = $input->getOption('name') ?: 'admin';
         $password = $input->getOption('password') ?: '123456';
+        $nickname = $input->getOption('nickname') ?: 'Admin';
         $config = get_db_config();
         $config['database'] = 'performance_schema';
         $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -55,7 +57,7 @@ class Install extends Command
         $this->execSql();
         Db::beginTransaction();
         try {
-            $this->createAdmin($username, $password);
+            $this->createAdmin($username, $password, $nickname);
             $this->loadEvent();
             $this->importMenu();
             mkfile(runtime_path() . DS . 'install.lock', date('Y-m-d H:i:s'));
@@ -86,13 +88,13 @@ class Install extends Command
         foreach (scandir($base_path) as $filename) {
             if (in_array($filename, ['.', '..'])) continue;
             $sqls = split_sql($base_path . $filename);
+            $list[] = [
+                'app' => 'system',
+                'name' => $filename,
+                'version' => $version,
+                'created_at' => time()
+            ];
             foreach ($sqls as $sql) {
-                $list[] = [
-                    'app' => 'system',
-                    'name' => $filename,
-                    'version' => $version,
-                    'created_at' => time()
-                ];
                 Db::select($sql);
                 list($type, $name) = $this->parseSqlInfo($sql);
                 switch($type) {
@@ -110,11 +112,12 @@ class Install extends Command
         Db::table('upgrades')->insert($list);
     }
 
-    protected function createAdmin($name, $password)
+    protected function createAdmin($name, $password, $nickname)
     {
         $admin = new AdminModel;
         $admin->username = $name;
         $admin->password = $password;
+        $admin->nickname = $nickname;
         $admin->save();
         $this->output->writeln("创建管理员成功。");
     }
