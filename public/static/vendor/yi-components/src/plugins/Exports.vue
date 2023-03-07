@@ -40,6 +40,8 @@
                                     <a-select v-model="row.format">
                                         <a-select-option value="default">{{$lang('Default')}}</a-select-option>
                                         <a-select-option value="date">{{$lang('Date')}}</a-select-option>
+                                        <a-select-option value="datetime">{{$lang('DateTime')}}</a-select-option>
+                                        <a-select-option value="time">{{$lang('Time')}}</a-select-option>
                                         <slot name="formatter"></slot>
                                     </a-select>
                                 </div>
@@ -167,7 +169,7 @@ export default {
     handleSaveSetting: function () {
       var self = this;
       var form = {
-        key: this.id,
+        key: 'Export' + this.id,
         data: {
           fields: this.fields,
           selectedRowKeys: this.selectedRowKeys,

@@ -9,8 +9,7 @@ class Plugin
     public static function install() 
     {
         Menu::install('%name%', 'admin', 'admin');
-        Menu::install('%name%', 'user', 'index');
-        Menu::install('%name%', 'user', 'api');
+        Menu::install('%name%', 'user', 'index,api');
     }
 
     public static function uninstall()

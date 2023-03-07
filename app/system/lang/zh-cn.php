@@ -94,6 +94,8 @@ return [
     'Refresh Menu' => '刷新菜单',
     'Default' => '默认',
     'Date' => '日期',
+    'DateTime' => '日期时间',
+    'Time' => '时间',
     'Export Setting' => '导出设置',
     'Fields Setting' => '字段设置',
     'Export Max Count' => '最大导出数量',

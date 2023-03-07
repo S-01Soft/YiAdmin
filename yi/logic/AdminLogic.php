@@ -524,7 +524,15 @@ class AdminLogic extends BaseLogic
                 $format = strtoupper($format);
                 switch ($format) {
                     case 'DATE':
+                        if (!empty($v)) $row[$k] = date('Y-m-d', $v);
+                        else $row[$k] = '';
+                        break;
+                    case 'DATETIME':
                         if (!empty($v)) $row[$k] = date('Y-m-d H:i:s', $v);
+                        else $row[$k] = '';
+                        break;
+                    case 'TIME':
+                        if (!empty($v)) $row[$k] = date('H:i:s', $v);
                         else $row[$k] = '';
                         break;
                     default :

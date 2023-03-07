@@ -35,8 +35,6 @@ CHANNEL_PORT = 2206
 
 访问后台：http://127.0.0.1:8787/system
 
-![图片](images/01.png)
-
 ## 官网
 
 https://www.yiadmin.net

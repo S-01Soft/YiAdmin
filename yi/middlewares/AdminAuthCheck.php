@@ -32,7 +32,7 @@ class AdminAuthCheck implements MiddlewareInterface
         if (in_array($action, $needLogin) || in_array('*', $needLogin)) {
             if (!$admin->isLogin()) {
                 if (request()->isAjax() || request()->expectsJson()) return error('您未登录', 9999);
-                else return redirect('/system/admin/index/login?referer=' . urlencode(request()->url()));
+                else return redirect('/system/admin/index/login?referer=' . urlencode(request()->fullurl()));
             }
             if ($admin->status == 0) {
                 return error(lang('The account is disabled'));

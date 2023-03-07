@@ -88,6 +88,8 @@ export default {
             hasPre: false,
             last_page: 1,
             inited: false,
+            page: 1,
+            pageSize: 10
         };
     },
     props: {
@@ -99,12 +101,6 @@ export default {
         },
         pagesizeField: {
             default: "page_size",
-        },
-        page: {
-            default: 1,
-        },
-        pagesize: {
-            default: 10,
         },
         value: {
             default: null,
@@ -146,6 +142,7 @@ export default {
                 else if (typeof v == "string") {
                 } else v = v ? v.join(",") : "";
             }
+            this.page = 1;
             this.$emit("input", v);
             this.$emit("vchange", v, this.data);
         },

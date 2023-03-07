@@ -44,7 +44,7 @@ class Http
     public static function get($url, $params = [], $options = [], $contentType = 'json')
     {
         $options['query'] = $params;
-        return static::request('GET', $url, $options);
+        return static::request('GET', $url, $options, $contentType);
     }
 
     public static function post($url, $params = [], $type = 'json', $options = [], $contentType = 'json')
@@ -60,6 +60,6 @@ class Http
                 $options['multipart'] = $params;
             break;
         }
-        return static::request('POST', $url, $options);
+        return static::request('POST', $url, $options, $contentType);
     }
 }
