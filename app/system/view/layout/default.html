@@ -95,7 +95,7 @@
     {:widget('component')}
     {block name="scripts"}{/block}
     {:widget('before-main-scripts')}
-    <script src="{$config.statics.open && $config.statics.maps.require ? $config.statics.maps.require : '/static/library/requirejs/require.js'}" data-main="/static/js/system.js?v={$config.statics.version|default='1.0.0'}"></script>
+    <script src="{$config.statics.open && $config.statics.maps.require ? $config.statics.maps.require : '/static/library/requirejs/require.js'}" data-main="/static/js/system.js?v={:get_version()}"></script>
     {:widget('after-main-scripts')}
 </body>
 </html>

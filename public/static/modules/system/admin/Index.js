@@ -419,7 +419,7 @@ define([], function () {
                         this.$http.post('login', { form: this.form }).then(function (data) {
                             self.btn_loading = false;
                             if (data.code === 1) {
-                                location.href = decodeURIComponent(Yi.getQuery('referer'));
+                                location.href = decodeURIComponent(Yi.getQuery('referer', location.search)) + location.hash;
                             } else if (data.code === 2) {
                                 self.verify_visible = true;
                                 self.message = data.message;

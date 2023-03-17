@@ -43,7 +43,7 @@ class WidgetView
     public function init()
     {
         $module = request()->getModule();
-        $controller = snake_controller(request()->getController(), DS);
+        $controller = snake_controller(request()->getController(), '/');
         $action = request()->getAction();
         $this->option = array_merge($this->option, [
             'module' => $module,

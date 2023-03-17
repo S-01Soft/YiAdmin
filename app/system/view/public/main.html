@@ -126,7 +126,7 @@
     </template>
     <script src="/static/js/common.js?v={$config.statics.version|default='1.0.0'}"></script>
     <script type="text/javascript" src="/static/js/yi.js?v={$config.statics.version|default='1.0.0'}"></script>
-    <script src='{$config.statics.open && !empty($config.statics.maps.require) ? $config.statics.maps.require : "/static/library/requirejs/require.js"}' data-main="/static/js/system.js?v={$config.statics.version|default='1.0.0'}"></script>
+    <script src='{$config.statics.open && !empty($config.statics.maps.require) ? $config.statics.maps.require : "/static/library/requirejs/require.js"}' data-main="/static/js/system.js?v={:get_version()}"></script>
     {:widget('component')}
     {:widget('main-scripts')}
 </body>

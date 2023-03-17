@@ -105,7 +105,7 @@ window.Mixins = {
                 params.title = setting.title;
                 var form = document.createElement("form");
                 form.style.display = "none";
-                form.action = get_url('exports');
+                form.action = Yi.event.listen(EventPrefix + 'ExportUrl', get_url('exports'));
                 form.method = "post";
                 document.body.appendChild(form);
                 for (var key in params) {
@@ -124,7 +124,8 @@ window.Mixins = {
                 var where = {};
                 where[key] = ['in', ids];
                 where = Yi.event.listen(EventPrefix + 'DeleteWhere', where);
-                this.$http.post(get_url('delete'), {where: where}).then(function(res) {
+                var url = Yi.event.listen(EventPrefix + 'DeleteUrl', get_url('delete'));
+                this.$http.post(url, {where: where}).then(function(res) {
                     self.selectedRowKeys = [];
                     callback && callback(res);
                 });
@@ -135,18 +136,21 @@ window.Mixins = {
             },
             handleAdd: function() {
                 var self = this;
+                var url = Yi.event.listen(EventPrefix + 'AddUrl', get_url('add'))
                 Yi.open({
                     title: $lang('Add'),
-                    content: get_url('add')
+                    content: url
                 }, function(data) {
                     if (data) self.init();
                 })
             },
             handleEdit: function(row) {
                 var self = this;
+                var url = get_url('edit') + '?id=' + row.id
+                url = Yi.event.listen(EventPrefix + 'EditUrl', url);
                 Yi.open({
                     title: $lang('Edit'),
-                    content: get_url('edit') + '?id=' + row.id
+                    content: url
                 }, function(data) {
                     if (data) self.init();
                 });
@@ -170,7 +174,10 @@ window.Mixins = {
             },
             toggle: function(row, params) {
                 var pk = $vm.pk || 'id';
-                return this.$http.post(get_url('toggle') + '?' + pk + '=' + row[pk], params);
+                var url = get_url('toggle') + '?' + pk + '=' + row[pk];
+                url = Yi.event.listen(EventPrefix + 'ToggleUrl', url);
+                params = Yi.event.listen(EventPrefix + 'ToggleParams', params);
+                return this.$http.post(url, params);
             }
         }
     },
@@ -178,14 +185,18 @@ window.Mixins = {
         methods: {
             init: function() {
                 var self = this;
-                this.$http.get(get_url(Config.action), {params: {id: this.id}}).then(function(data) {
+                var url = Yi.event.listen(EventPrefix + 'InitUrl', get_url(Config.action));
+                var form = Yi.event.listen(EventPrefix + 'InitForm', { params: { id: this.id } });
+                this.$http.get(url, form).then(function(data) {
                     self.form = Yi.event.listen(EventPrefix + 'Init', data);
                 });
             },
             onSubmit: function() {
                 var self = this;
+                var url = Yi.event.listen(EventPrefix + 'SubmitUrl', get_url(Config.action));
+                var form = Yi.event.listen(EventPrefix + 'SubmitForm',{ form: self.form });
                 this.$refs.ruleForm.validate(function(valid) {
-                    if (valid) self.submit(get_url(Config.action), { form: self.form }, function(data) {
+                    if (valid) self.submit(url, form, function(data) {
                         Yi.closeSelf(data);
                     });
                     else return false;

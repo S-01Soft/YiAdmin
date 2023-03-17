@@ -234,7 +234,7 @@ class Module
             if (!empty($upgrade)) {
                 self::mergeConfig($name, $config);
             }
-            static::ModuleInstall($name);
+            static::moduleInstall($name);
             Db::commit();
         } catch (\ZipException $e) {
             if (!empty($upgrade)) self::backup($name);
